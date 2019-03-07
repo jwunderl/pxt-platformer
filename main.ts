@@ -29,7 +29,6 @@ let canDoubleJump = false
 let gravity = 0
 let bumper: Sprite = null
 let currentLevel = 0
-let mainCharacterWalking: animation.Animation = null
 let heroFacingLeft = false;
 let levelMaps: Image[] = []
 
@@ -319,23 +318,23 @@ function initializeHeroAnimations() {
     `);
     for (let i = 0; i < 30; i++) {
         mainJumpLeft.addAnimationFrame(img`
-        0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
-        0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
-        0 0 0 E E E E E E E E E E 0 0 0
-        0 0 E E E E E E E E E E E E 0 0
-        0 0 D D D D D D D D D E E D 0 0
-        0 0 D D F D D D D F D D E D 0 0
-        0 0 D D F D D D D F D D D E 0 0
-        0 0 D D F D D D D F D D D 0 0 0
-        0 D D D D D D D D D D D D 0 D 0
-        D D A B C C C C C C C C B A D D
-        0 D A C C C C C C C C C C A D 0
-        0 0 0 F F F B B F F F F F 0 0 0
-        0 0 0 A A A A A A A A A B 0 0 0
-        0 0 0 0 A A B 0 0 A A B 0 0 0 0
-        0 0 0 0 F F F 0 0 F F F 0 0 0 0
-        0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
-    `);
+            0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+            0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+            0 0 0 E E E E E E E E E E 0 0 0
+            0 0 E E E E E E E E E E E E 0 0
+            0 0 D D D D D D D D D E E D 0 0
+            0 0 D D F D D D D F D D E D 0 0
+            0 0 D D F D D D D F D D D E 0 0
+            0 0 D D F D D D D F D D D 0 0 0
+            0 D D D D D D D D D D D D 0 D 0
+            0 D A B C C C C C C C C B A D 0
+            0 D A C C C C C C C C C C A D 0
+            0 0 0 F F F B B F F F F F 0 0 0
+            0 0 0 A A A A A A A A A B 0 0 0
+            0 0 0 0 A A B 0 0 A A B 0 0 0 0
+            0 0 0 0 F F F 0 0 F F F 0 0 0 0
+            0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+        `);
     }
 
     let mainJumpRight = animation.createAnimation(ActionKind.JumpingRight, 100);
@@ -387,7 +386,7 @@ function initializeHeroAnimations() {
             0 0 E D D D F D D D D F D D 0 0
             0 0 0 D D D F D D D D F D D 0 0
             0 D 0 D D D D D D D D D D D D 0
-            D D A B C C C C C C C C B A D D
+            0 D A B C C C C C C C C B A D 0
             0 D A C C C C C C C C C C A D 0
             0 0 0 F F F F F B B F F F 0 0 0
             0 0 0 B A A A A A A A A A 0 0 0
