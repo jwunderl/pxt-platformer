@@ -3,7 +3,10 @@
     "version": "0.0.0",
     "description": "",
     "dependencies": {
-        "device": "*"
+        "device": "*",
+        "animation": "*",
+        "pxt-platformer-sprite-sheet": "github:jwunderl/pxt-platformer-sprite-sheet#v0.0.4",
+        "pxt-cloudy-background": "github:jwunderl/pxt-cloudy-background#v0.0.7"
     },
     "files": [
         "README.md",
@@ -12,6 +15,5 @@
     "testFiles": [
         "test.ts"
     ],
-    "public": false,
-    "additionalFilePaths": []
+    "public": false
 }
