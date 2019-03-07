@@ -19,18 +19,54 @@ enum ActionKind {
     CrouchRight
 }
 
-let playerBenefit = 0
-let coin: Sprite = null
-let hero: Sprite = null
-let invincibilityPeriod = 0
-let pixelsToMeters = 0
-let doubleJumpSpeed = 0
+let hero = sprites.create(img`
+    . . . . . . . . . . . . . . . .
+    . . . . . . . . . . . . . . . .
+    . . . . e e e e e e e e e . . .
+    . . . e e e e e e e e e e . . .
+    . . . e e e e e e e e e e . . .
+    . . . d e e d d d d d d d . . .
+    . . . d e d d f d d d f d . . .
+    . . . e d d d f d d d f d . . .
+    . . . . d d d d d d d d d . . .
+    . . . . d d d d 1 1 d d d . . .
+    . . . . a a c c c c c c a . . .
+    . . . . d d c c c c c c d . . .
+    . . . . d d f f f 9 f f d . . .
+    . . . . a a a a a a a a . . . .
+    . . . . . a a . . a a . . . . .
+    . . . . . e e . . e e . . . . .
+`, SpriteKind.Player)
+// how long to pause between each contact with a
+// single enemy
+let invincibilityPeriod = 500
+let pixelsToMeters = 30
 let canDoubleJump = false
-let gravity = 0
-let bumper: Sprite = null
+let gravity = 9.81 * pixelsToMeters
+
 let currentLevel = 0
 let heroFacingLeft = false;
-let levelMaps: Image[] = []
+let levelMaps = [
+    img`
+        . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+        . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 5 . 5 . . . . . . . . .
+        . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 5 5 6 . 6 5 . . . . . . . .
+        . . . . . . . . 5 . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 5 5 5 5 . 6 6 6 . 6 6 . . . . . . . .
+        . . . . 5 . . . . . 5 5 . . . . . . . . . . . . . . . . . . . . . . . . . . . . 5 5 5 5 . 6 6 6 6 . . . . . . . . . . . . . . .
+        . . . . . . . . 6 . . . . 6 . . . . . . . . . . . . . . . . . 6 . . . . . . . . 6 6 6 6 . . . . . . . . . . . . . . . . . . . .
+        . 1 . . 6 . . . 7 . 2 . . 7 . . . 2 6 . 2 . . 2 . 6 . . . . . 7 . . . . . e . . . . . . . . . . . . . . . . . . . . . . . . . .
+        f f f f 7 f f f 7 f f f f 7 f f f f 7 f f f f f f 7 f f f f f 7 f f f f f f f f f f f f f f f f f f f f f f f f f f f f f f f f
+    `, img`
+        . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+        . . . . . . . . . . . . . . . . . . . . . 6 . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+        . . . . . . . . . . . . . . . . . . . 6 5 7 . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+        . . . . . . . 6 6 . 6 . . . . . . 6 . 7 5 7 . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+        . . . . . . 6 7 7 . 7 . . . . 6 . 7 . 7 5 7 . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 5 5 5 . . 5 5 5
+        . . . . . 6 7 7 7 . 7 . . 6 . 7 5 7 5 7 5 7 . . . 5 5 5 5 5 5 5 . . . . . . . . . . . . . . . . . . . . . . . . 5 5 5 . . 5 5 5
+        . 1 . . . . . . 2 . 7 . . 7 . 2 . . . 2 5 7 . . . . . . . . . . . . . . . e . . . . . . . . . . . . . . . . . . 5 5 5 . . 5 5 5
+        f f f f f f f f f f 7 f f f f f f f f f f 7 f f f f f f f f f f f f f f f f f f f f f f f f f f f f f f f f f f f f f f f f f f
+    `
+]
 
 function initializeAnimations() {
     initializeHeroAnimations();
@@ -432,7 +468,7 @@ game.onUpdate(function () {
 
 
 sprites.onOverlap(SpriteKind.Player, SpriteKind.Bumper, function (sprite, otherSprite) {
-    if (sprite.bottom - playerBenefit < otherSprite.y) {
+    if (sprite.vy > 0 && !sprite.isHittingTile(CollisionDirection.Bottom)) {
         otherSprite.destroy(effects.ashes, 250)
         otherSprite.vy = -50
         info.changeScoreBy(1)
@@ -448,7 +484,7 @@ sprites.onOverlap(SpriteKind.Player, SpriteKind.Bumper, function (sprite, otherS
 function createEnemies() {
     // enemy that moves back and forth
     for (let value of scene.getTilesByType(2)) {
-        bumper = sprites.create(img`
+        let bumper = sprites.create(img`
             . . . . . . . . . . . . . . . .
             . . . . . . . . . . . . . . . .
             . . . . . . . . . . . . . . . .
@@ -508,7 +544,7 @@ function attemptJump() {
     if (hero.isHittingTile(CollisionDirection.Bottom)) {
         hero.vy = -4 * pixelsToMeters
     } else if (canDoubleJump) {
-        doubleJumpSpeed = -3 * pixelsToMeters
+        let doubleJumpSpeed = -3 * pixelsToMeters
         // Good double jump
         if (hero.vy >= -40) {
             doubleJumpSpeed = -4.5 * pixelsToMeters
@@ -952,7 +988,7 @@ function spawnGoals() {
         . . . . f f f f f f f f . . . .
     `, SpriteKind.Goal), 14)
     for (let value of scene.getTilesByType(5)) {
-        coin = sprites.create(img`
+        let coin = sprites.create(img`
             . . . . . . . . . . . . . . . .
             . . . . . . . . . . . . . . . .
             . . . . . 5 5 5 5 5 5 5 . . . .
@@ -987,62 +1023,13 @@ function clearGame() {
 }
 
 sprites.onOverlap(SpriteKind.Player, SpriteKind.Coin, function (sprite, otherSprite) {
-    otherSprite.destroy(effects.smiles, 25)
+    otherSprite.destroy(effects.trail, 100)
     otherSprite.y += -3
     info.changeScoreBy(3)
     music.baDing.play()
 })
 
-levelMaps = [
-    img`
-        . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
-        . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 5 . 5 . . . . . . . . .
-        . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 5 5 6 . 6 5 . . . . . . . .
-        . . . . . . . . 5 . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 5 5 5 5 . 6 6 6 . 6 6 . . . . . . . .
-        . . . . 5 . . . . . 5 5 . . . . . . . . . . . . . . . . . . . . . . . . . . . . 5 5 5 5 . 6 6 6 6 . . . . . . . . . . . . . . .
-        . . . . . . . . 6 . . . . 6 . . . . . . . . . . . . . . . . . 6 . . . . . . . . 6 6 6 6 . . . . . . . . . . . . . . . . . . . .
-        . 1 . . 6 . . . 7 . 2 . . 7 . . . 2 6 . 2 . . 2 . 6 . . . . . 7 . . . . . e . . . . . . . . . . . . . . . . . . . . . . . . . .
-        f f f f 7 f f f 7 f f f f 7 f f f f 7 f f f f f f 7 f f f f f 7 f f f f f f f f f f f f f f f f f f f f f f f f f f f f f f f f
-    `, img`
-        . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
-        . . . . . . . . . . . . . . . . . . . . . 6 . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
-        . . . . . . . . . . . . . . . . . . . 6 5 7 . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
-        . . . . . . . 6 6 . 6 . . . . . . 6 . 7 5 7 . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
-        . . . . . . 6 7 7 . 7 . . . . 6 . 7 . 7 5 7 . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 5 5 5 . . 5 5 5
-        . . . . . 6 7 7 7 . 7 . . 6 . 7 5 7 5 7 5 7 . . . 5 5 5 5 5 5 5 . . . . . . . . . . . . . . . . . . . . . . . . 5 5 5 . . 5 5 5
-        . 1 . . . . . . 2 . 7 . . 7 . 2 . . . 2 5 7 . . . . . . . . . . . . . . . e . . . . . . . . . . . . . . . . . . 5 5 5 . . 5 5 5
-        f f f f f f f f f f 7 f f f f f f f f f f 7 f f f f f f f f f f f f f f f f f f f f f f f f f f f f f f f f f f f f f f f f f f
-    `
-]
-
 initializeScene()
-pixelsToMeters = 30
-gravity = 9.81 * pixelsToMeters
-// how long to pause between each contact with a
-// single enemy
-invincibilityPeriod = 500
-// how many extra pixels to 'give' the player when
-// detecting overlaps as success / failure
-playerBenefit = 3
-currentLevel = 0
-hero = sprites.create(img`
-    . . . . . . . . . . . . . . . .
-    . . . . . . . . . . . . . . . .
-    . . . . e e e e e e e e e . . .
-    . . . e e e e e e e e e e . . .
-    . . . e e e e e e e e e e . . .
-    . . . d e e d d d d d d d . . .
-    . . . d e d d f d d d f d . . .
-    . . . e d d d f d d d f d . . .
-    . . . . d d d d d d d d d . . .
-    . . . . d d d d 1 1 d d d . . .
-    . . . . a a c c c c c c a . . .
-    . . . . d d c c c c c c d . . .
-    . . . . d d f f f 9 f f d . . .
-    . . . . a a a a a a a a . . . .
-    . . . . . a a . . a a . . . . .
-    . . . . . e e . . e e . . . . .
-`, SpriteKind.Player)
 createPlayer(hero)
 initializeLevel(currentLevel)
 initializeAnimations()
@@ -1061,6 +1048,9 @@ game.onUpdate(function () {
 // Reset double jump when standing on wall
 game.onUpdate(function () {
     if (hero.isHittingTile(CollisionDirection.Bottom)) {
+        hero.ay = 0;
         canDoubleJump = true
+    } else {
+        hero.ay = gravity
     }
 })
