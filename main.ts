@@ -9,9 +9,14 @@ enum SpriteKind {
 }
 
 enum ActionKind {
-    Walking,
-    Idle,
-    Jumping
+    RunningLeft,
+    RunningRight,
+    IdleLeft,
+    IdleRight,
+    JumpingLeft,
+    JumpingRight,
+    CrouchLeft,
+    CrouchRight
 }
 
 let playerBenefit = 0
@@ -25,31 +30,407 @@ let gravity = 0
 let bumper: Sprite = null
 let currentLevel = 0
 let mainCharacterWalking: animation.Animation = null
+let heroFacingLeft = false;
 let levelMaps: Image[] = []
 
 function initializeAnimations() {
-    mainCharacterWalking = animation.createAnimation(ActionKind.Walking, 125)
-    mainCharacterWalking.addAnimationFrame(img`
-        . . . . . . . . . . . . . . . .
-        . . . . . . . . . . . . . . . .
-        . . . e e e e e e e e e e e . .
-        . . e e e e e e e e e e e e . .
-        . . d e e d d d d d d d d d . .
-        . . d e d d f d d d d f d d . .
-        . . e d d d f d d d d f d d . .
-        . . . d d d f d d d d f d d . .
-        . . . d d d d d d d d d d d . .
-        . . . a a c c c c c c c c a . .
-        . . . d d c c c c c c c c d . .
-        . . . d d f f f b b f f f d . .
-        . . . a a a a a a a a a a . . .
-        . . . . a a a . . a a a . . . .
-        . . . . a a a . . a a a . . . .
-        . . . . f f f . . f f f . . . .
-    `)
-    animation.attachAnimation(hero, mainCharacterWalking)
-    animation.setAction(hero, ActionKind.Walking)
+    initializeHeroAnimations();
 }
+
+function initializeHeroAnimations() {
+    let mainRunLeft = animation.createAnimation(ActionKind.RunningLeft, 100)
+    animation.attachAnimation(hero, mainRunLeft)
+    mainRunLeft.addAnimationFrame(img`
+        0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+        0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+        0 0 0 E E E E E E E 0 0 0 0 0 0
+        0 0 E E E E E E E E E 0 0 0 0 0
+        0 0 D D D D E D D E E 0 0 0 0 0
+        0 0 D D F D D E D E E 0 0 0 0 0
+        0 0 D D F D D D E E E 0 0 0 0 0
+        0 0 D D F D D D D D D 0 0 0 0 0
+        0 0 D D D D D D D D D 0 0 0 0 0
+        0 0 0 C C C A A C C B 0 0 0 0 0
+        0 0 0 C C D D D C C B 0 0 0 0 0
+        0 0 0 B F F D D F F F 0 0 0 0 0
+        0 0 0 A A A A A A A B 0 0 0 0 0
+        0 0 0 0 A A A A B 0 0 0 0 0 0 0
+        0 0 0 0 A A A A B 0 0 0 0 0 0 0
+        0 0 0 0 F F F F F 0 0 0 0 0 0 0
+    `)
+    mainRunLeft.addAnimationFrame(img`
+        0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+        0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+        0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+        0 0 0 E E E E E E E 0 0 0 0 0 0
+        0 0 E E E E E E E E E 0 0 0 0 0
+        0 0 D D D D E D D E E 0 0 0 0 0
+        0 0 D D F D D E D E E 0 0 0 0 0
+        0 0 D D F D D D E E E 0 0 0 0 0
+        0 0 D D F D D D D D D 0 0 0 0 0
+        0 0 D D D D D D D D D 0 0 0 0 0
+        0 0 0 C C C C A A C B 0 0 0 0 0
+        0 0 0 C C C C D D C B 0 0 0 0 0
+        0 0 0 B F F D D D F F 0 0 0 0 0
+        0 0 0 A A A A A A A A B F 0 0 0
+        0 0 0 0 A A B 0 0 A A A F 0 0 0
+        0 0 0 0 F F F 0 0 0 0 F 0 0 0 0
+    `)
+    mainRunLeft.addAnimationFrame(img`
+        0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+        0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+        0 0 0 E E E E E E E 0 0 0 0 0 0
+        0 0 E E E E E E E E E 0 0 0 0 0
+        0 0 D D D D E D D E E 0 0 0 0 0
+        0 0 D D F D D E D E E 0 0 0 0 0
+        0 0 D D F D D D E E E 0 0 0 0 0
+        0 0 D D F D D D D D D 0 0 0 0 0
+        0 0 D D D D D D D D D 0 0 0 0 0
+        0 0 0 C C C A A C C B 0 0 0 0 0
+        0 0 0 C C D D D C C B 0 0 0 0 0
+        0 0 0 B F F D D F F F 0 0 0 0 0
+        0 0 0 A A A A A A A B 0 0 0 0 0
+        0 0 0 0 A A A A B 0 0 0 0 0 0 0
+        0 0 0 0 A A A A B 0 0 0 0 0 0 0
+        0 0 0 0 F F F F F 0 0 0 0 0 0 0
+    `)
+    mainRunLeft.addAnimationFrame(img`
+        0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+        0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+        0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+        0 0 0 E E E E E E E 0 0 0 0 0 0
+        0 0 E E E E E E E E E 0 0 0 0 0
+        0 0 D D D D E D D E E 0 0 0 0 0
+        0 0 D D F D D E D E E 0 0 0 0 0
+        0 0 D D F D D D E E E 0 0 0 0 0
+        0 0 D D F D D D D D D 0 0 0 0 0
+        0 0 D D D D D D D D D 0 0 0 0 0
+        0 0 0 C A A C C C C B 0 0 0 0 0
+        0 0 D D D B C C C C B 0 0 0 0 0
+        0 F 0 D D F F F F F F 0 0 0 0 0
+        0 F F A A A A A A A B 0 0 0 0 0
+        0 F A A B 0 A A B 0 0 0 0 0 0 0
+        0 0 0 0 0 0 F F F 0 0 0 0 0 0 0
+    `)
+
+    let mainRunRight = animation.createAnimation(ActionKind.RunningRight, 100)
+    animation.attachAnimation(hero, mainRunRight)
+    mainRunRight.addAnimationFrame(img`
+        0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+        0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+        0 0 0 0 0 0 E E E E E E E 0 0 0
+        0 0 0 0 0 E E E E E E E E E 0 0
+        0 0 0 0 0 E E D D E D D D D 0 0
+        0 0 0 0 0 E E D E D D F D D 0 0
+        0 0 0 0 0 E E E D D D F D D 0 0
+        0 0 0 0 0 D D D D D D F D D 0 0
+        0 0 0 0 0 D D D D D D D D D 0 0
+        0 0 0 0 0 B C C A A C C C 0 0 0
+        0 0 0 0 0 B C C D D D C C 0 0 0
+        0 0 0 0 0 F F F D D F F B 0 0 0
+        0 0 0 0 0 B A A A A A A A 0 0 0
+        0 0 0 0 0 0 0 B A A A A 0 0 0 0
+        0 0 0 0 0 0 0 B A A A A 0 0 0 0
+        0 0 0 0 0 0 0 F F F F F 0 0 0 0
+    `)
+    mainRunRight.addAnimationFrame(img`
+        0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+        0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+        0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+        0 0 0 0 0 0 E E E E E E E 0 0 0
+        0 0 0 0 0 E E E E E E E E E 0 0
+        0 0 0 0 0 E E D D E D D D D 0 0
+        0 0 0 0 0 E E D E D D F D D 0 0
+        0 0 0 0 0 E E E D D D F D D 0 0
+        0 0 0 0 0 D D D D D D F D D 0 0
+        0 0 0 0 0 D D D D D D D D D 0 0
+        0 0 0 0 0 B C A A C C C C 0 0 0
+        0 0 0 0 0 B C D D C C C C 0 0 0
+        0 0 0 0 0 F F D D D F F B 0 0 0
+        0 0 0 F B A A A A A A A A 0 0 0
+        0 0 0 F A A A 0 0 B A A 0 0 0 0
+        0 0 0 0 F 0 0 0 0 F F F 0 0 0 0
+    `)
+    mainRunRight.addAnimationFrame(img`
+        0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+        0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+        0 0 0 0 0 0 E E E E E E E 0 0 0
+        0 0 0 0 0 E E E E E E E E E 0 0
+        0 0 0 0 0 E E D D E D D D D 0 0
+        0 0 0 0 0 E E D E D D F D D 0 0
+        0 0 0 0 0 E E E D D D F D D 0 0
+        0 0 0 0 0 D D D D D D F D D 0 0
+        0 0 0 0 0 D D D D D D D D D 0 0
+        0 0 0 0 0 B C C A A C C C 0 0 0
+        0 0 0 0 0 B C C D D D C C 0 0 0
+        0 0 0 0 0 F F F D D F F B 0 0 0
+        0 0 0 0 0 B A A A A A A A 0 0 0
+        0 0 0 0 0 0 0 B A A A A 0 0 0 0
+        0 0 0 0 0 0 0 B A A A A 0 0 0 0
+        0 0 0 0 0 0 0 F F F F F 0 0 0 0
+    `)
+    mainRunRight.addAnimationFrame(img`
+        0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+        0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+        0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+        0 0 0 0 0 0 E E E E E E E 0 0 0
+        0 0 0 0 0 E E E E E E E E E 0 0
+        0 0 0 0 0 E E D D E D D D D 0 0
+        0 0 0 0 0 E E D E D D F D D 0 0
+        0 0 0 0 0 E E E D D D F D D 0 0
+        0 0 0 0 0 D D D D D D F D D 0 0
+        0 0 0 0 0 D D D D D D D D D 0 0
+        0 0 0 0 0 B C C C C A A C 0 0 0
+        0 0 0 0 0 B C C C C B D D D 0 0
+        0 0 0 0 0 F F F F F F D D 0 F 0
+        0 0 0 0 0 B A A A A A A A F F 0
+        0 0 0 0 0 0 0 B A A 0 B A A F 0
+        0 0 0 0 0 0 0 F F F 0 0 0 0 0 0
+    `)
+
+    /** idle **/
+    let mainIdleLeft = animation.createAnimation(ActionKind.IdleLeft, 100);
+    animation.attachAnimation(hero, mainIdleLeft)
+    mainIdleLeft.addAnimationFrame(img`
+        0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+        0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+        0 0 0 E E E E E E E E E E 0 0 0
+        0 0 E E E E E E E E E E E E 0 0
+        0 0 D D D D D D D D D E E D 0 0
+        0 0 D D F D D D D F D D E D 0 0
+        0 0 D D F D D D D F D D D E 0 0
+        0 0 D D F D D D D F D D D 0 0 0
+        0 0 D D D D D D D D D D D 0 0 0
+        0 0 A C C C C C C C C A B 0 0 0
+        0 0 D D C C C C C C D D D 0 0 0
+        0 0 D F F F B B F F F D D 0 0 0
+        0 0 0 A A A A A A A A A B 0 0 0
+        0 0 0 0 A A B 0 0 A A B 0 0 0 0
+        0 0 0 0 A A B 0 0 A A B 0 0 0 0
+        0 0 0 0 F F F 0 0 F F F 0 0 0 0
+    `);
+
+    let mainIdleRight = animation.createAnimation(ActionKind.IdleRight, 100);
+    animation.attachAnimation(hero, mainIdleRight)
+    mainIdleRight.addAnimationFrame(img`
+        0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+        0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+        0 0 0 E E E E E E E E E E 0 0 0
+        0 0 E E E E E E E E E E E E 0 0
+        0 0 D E E D D D D D D D D D 0 0
+        0 0 D E D D F D D D D F D D 0 0
+        0 0 E D D D F D D D D F D D 0 0
+        0 0 0 D D D F D D D D F D D 0 0
+        0 0 0 D D D D D D D D D D D 0 0
+        0 0 0 B A C C C C C C C C A 0 0
+        0 0 0 D D D C C C C C C D D 0 0
+        0 0 0 D D F F F B B F F F D 0 0
+        0 0 0 B A A A A A A A A A 0 0 0
+        0 0 0 0 B A A 0 0 B A A 0 0 0 0
+        0 0 0 0 B A A 0 0 B A A 0 0 0 0
+        0 0 0 0 F F F 0 0 F F F 0 0 0 0
+    `);
+
+    /** crouch */
+
+    let mainCrouchLeft = animation.createAnimation(ActionKind.CrouchLeft, 100);
+    animation.attachAnimation(hero, mainCrouchLeft);
+    mainCrouchLeft.addAnimationFrame(img`
+        0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+        0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+        0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+        0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+        0 0 0 E E E E E E E E E E 0 0 0
+        0 0 E E E E E E E E E E E E 0 0
+        0 0 D D D D D D D D D E E D 0 0
+        0 0 D D F D D D D F D D E D 0 0
+        0 0 D D F D D D D F D D D E 0 0
+        0 0 D D F D D D D F D D D 0 0 0
+        0 0 D D D D D D D D D D D 0 0 0
+        0 0 A C C C C C C C C A B 0 0 0
+        0 0 D C C C C C C C C C D D 0 0
+        0 D D F F F B B F F F F D D 0 0
+        0 0 0 A A A A A A A A A B 0 0 0
+        0 0 0 0 F F F 0 0 F F F 0 0 0 0
+    `);
+
+    let mainCrouchRight = animation.createAnimation(ActionKind.CrouchRight, 100);
+    animation.attachAnimation(hero, mainCrouchRight);
+    mainCrouchRight.addAnimationFrame(img`
+        0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+        0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+        0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+        0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+        0 0 0 E E E E E E E E E E 0 0 0
+        0 0 E E E E E E E E E E E E 0 0
+        0 0 D E E D D D D D D D D D 0 0
+        0 0 D E D D F D D D D F D D 0 0
+        0 0 E D D D F D D D D F D D 0 0
+        0 0 0 D D D F D D D D F D D 0 0
+        0 0 0 D D D D D D D D D D D 0 0
+        0 0 0 B A C C C C C C C C A 0 0
+        0 0 D D C C C C C C C C C D 0 0
+        0 0 D D F F F F B B F F F D D 0
+        0 0 0 B A A A A A A A A A 0 0 0
+        0 0 0 0 F F F 0 0 F F F 0 0 0 0
+    `);
+
+    /** jumping **/
+    // Because there isn't currently an easy way to say "play this animation a single time
+    // and stop at the end", this just adds a bunch of the same frame at the end to accomplish
+    // the same behavior
+    let mainJumpLeft = animation.createAnimation(ActionKind.JumpingLeft, 100);
+    animation.attachAnimation(hero, mainJumpLeft)
+    mainJumpLeft.addAnimationFrame(img`
+        0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+        0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+        0 0 0 E E E E E E E E E E 0 0 0
+        0 0 E E E E E E E E E E E E 0 0
+        0 0 D D D D D D D D D E E D 0 0
+        0 0 D D F D D D D F D D E D 0 0
+        0 0 D D F D D D D F D D D E 0 0
+        0 0 D D F D D D D F D D D 0 0 0
+        0 0 D D D D D D D D D D D 0 0 0
+        0 0 A C C C C C C C C A B 0 0 0
+        0 0 D D C C C C C C D D D 0 0 0
+        0 0 D F F F B B F F F D D 0 0 0
+        0 0 0 A A A A A A A A A B 0 0 0
+        0 0 0 0 A A B 0 0 A A B 0 0 0 0
+        0 0 0 0 A A B 0 0 A A B 0 0 0 0
+        0 0 0 0 F F F 0 0 F F F 0 0 0 0
+    `);
+    mainJumpLeft.addAnimationFrame(img`
+        0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+        0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+        0 0 0 E E E E E E E E E E 0 0 0
+        0 0 E E E E E E E E E E E E 0 0
+        0 0 D D D D D D D D D E E D 0 0
+        0 0 D D F D D D D F D D E D 0 0
+        0 0 D D F D D D D F D D D E 0 0
+        0 0 D D F D D D D F D D D 0 0 0
+        0 0 D D D D D D D D D D D 0 0 0
+        0 0 A C C C C C C C C A B 0 0 0
+        0 0 D D C C C C C C D D D 0 0 0
+        0 0 D F F F B B F F F D D 0 0 0
+        0 0 0 A A A A A A A A A B 0 0 0
+        0 0 0 0 A A B 0 0 A A B 0 0 0 0
+        0 0 0 0 F F F 0 0 F F F 0 0 0 0
+        0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+    `);
+    for (let i = 0; i < 30; i++) {
+        mainJumpLeft.addAnimationFrame(img`
+        0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+        0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+        0 0 0 E E E E E E E E E E 0 0 0
+        0 0 E E E E E E E E E E E E 0 0
+        0 0 D D D D D D D D D E E D 0 0
+        0 0 D D F D D D D F D D E D 0 0
+        0 0 D D F D D D D F D D D E 0 0
+        0 0 D D F D D D D F D D D 0 0 0
+        0 D D D D D D D D D D D D 0 D 0
+        D D A B C C C C C C C C B A D D
+        0 D A C C C C C C C C C C A D 0
+        0 0 0 F F F B B F F F F F 0 0 0
+        0 0 0 A A A A A A A A A B 0 0 0
+        0 0 0 0 A A B 0 0 A A B 0 0 0 0
+        0 0 0 0 F F F 0 0 F F F 0 0 0 0
+        0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+    `);
+    }
+
+    let mainJumpRight = animation.createAnimation(ActionKind.JumpingRight, 100);
+    animation.attachAnimation(hero, mainJumpRight)
+    mainJumpRight.addAnimationFrame(img`
+        0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+        0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+        0 0 0 E E E E E E E E E E 0 0 0
+        0 0 E E E E E E E E E E E E 0 0
+        0 0 D E E D D D D D D D D D 0 0
+        0 0 D E D D F D D D D F D D 0 0
+        0 0 E D D D F D D D D F D D 0 0
+        0 0 0 D D D F D D D D F D D 0 0
+        0 0 0 D D D D D D D D D D D 0 0
+        0 0 0 B A C C C C C C C C A 0 0
+        0 0 0 D D D C C C C C C D D 0 0
+        0 0 0 D D F F F B B F F F D 0 0
+        0 0 0 B A A A A A A A A A 0 0 0
+        0 0 0 0 B A A 0 0 B A A 0 0 0 0
+        0 0 0 0 B A A 0 0 B A A 0 0 0 0
+        0 0 0 0 F F F 0 0 F F F 0 0 0 0
+    `);
+    mainJumpRight.addAnimationFrame(img`
+        0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+        0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+        0 0 0 E E E E E E E E E E 0 0 0
+        0 0 E E E E E E E E E E E E 0 0
+        0 0 D E E D D D D D D D D D 0 0
+        0 0 D E D D F D D D D F D D 0 0
+        0 0 E D D D F D D D D F D D 0 0
+        0 0 0 D D D F D D D D F D D 0 0
+        0 0 0 D D D D D D D D D D D 0 0
+        0 0 0 B A C C C C C C C C A 0 0
+        0 0 0 D D D C C C C C C D D 0 0
+        0 0 0 D D F F F B B F F F D 0 0
+        0 0 0 B A A A A A A A A A 0 0 0
+        0 0 0 0 B A A 0 0 B A A 0 0 0 0
+        0 0 0 0 F F F 0 0 F F F 0 0 0 0
+        0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+    `);
+    for (let i = 0; i < 30; i++) {
+        mainJumpRight.addAnimationFrame(img`
+            0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+            0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+            0 0 0 E E E E E E E E E E 0 0 0
+            0 0 E E E E E E E E E E E E 0 0
+            0 0 D E E D D D D D D D D D 0 0
+            0 0 D E D D F D D D D F D D 0 0
+            0 0 E D D D F D D D D F D D 0 0
+            0 0 0 D D D F D D D D F D D 0 0
+            0 D 0 D D D D D D D D D D D D 0
+            D D A B C C C C C C C C B A D D
+            0 D A C C C C C C C C C C A D 0
+            0 0 0 F F F F F B B F F F 0 0 0
+            0 0 0 B A A A A A A A A A 0 0 0
+            0 0 0 0 B A A 0 0 B A A 0 0 0 0
+            0 0 0 0 F F F 0 0 F F F 0 0 0 0
+            0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+        `);
+    }
+}
+
+// set up hero animations
+game.onUpdate(function () {
+    if (hero.vx < 0) {
+        heroFacingLeft = true;
+    } else if (hero.vx > 0) {
+        heroFacingLeft = false;
+    }
+
+    if (controller.down.isPressed()) {
+        if (heroFacingLeft) {
+            animation.setAction(hero, ActionKind.CrouchLeft);
+        } else {
+            animation.setAction(hero, ActionKind.CrouchRight);
+        }
+    } else if (hero.vy < 20) {
+        if (heroFacingLeft) {
+            animation.setAction(hero, ActionKind.JumpingLeft)
+        } else {
+            animation.setAction(hero, ActionKind.JumpingRight)
+        }
+    } else if (hero.vx < 0) {
+        animation.setAction(hero, ActionKind.RunningLeft)
+    } else if (hero.vx > 0) {
+        animation.setAction(hero, ActionKind.RunningRight)
+    } else {
+        if (heroFacingLeft) {
+            animation.setAction(hero, ActionKind.IdleLeft)
+        } else {
+            animation.setAction(hero, ActionKind.IdleRight)
+        }
+    }
+})
+
 
 sprites.onOverlap(SpriteKind.Player, SpriteKind.Bumper, function (sprite, otherSprite) {
     if (sprite.bottom - playerBenefit < otherSprite.y) {
