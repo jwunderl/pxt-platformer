@@ -1127,22 +1127,22 @@ function spawnGoals() {
     `, SpriteKind.Goal), 14)
     for (let value of scene.getTilesByType(5)) {
         let coin = sprites.create(img`
-            0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 
-            0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 
-            0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 
-            0 0 0 0 0 0 F F F F 0 0 0 0 0 0 
-            0 0 0 0 F F 5 5 5 5 F F 0 0 0 0 
-            0 0 0 0 F 5 5 5 5 5 5 F 0 0 0 0 
-            0 0 0 F 5 5 5 4 4 5 5 5 F 0 0 0 
-            0 0 0 F 5 5 5 4 4 5 5 5 F 0 0 0 
-            0 0 0 F 5 5 5 4 4 5 5 5 F 0 0 0 
-            0 0 0 F 5 5 5 4 4 5 5 5 F 0 0 0 
-            0 0 0 0 F 5 5 5 5 5 5 F 0 0 0 0 
-            0 0 0 0 F F 5 5 5 5 F F 0 0 0 0 
-            0 0 0 0 0 0 F F F F 0 0 0 0 0 0 
-            0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 
-            0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 
-            0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 
+            0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+            0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+            0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+            0 0 0 0 0 0 F F F F 0 0 0 0 0 0
+            0 0 0 0 F F 5 5 5 5 F F 0 0 0 0
+            0 0 0 0 F 5 5 5 5 5 5 F 0 0 0 0
+            0 0 0 F 5 5 5 4 4 5 5 5 F 0 0 0
+            0 0 0 F 5 5 5 4 4 5 5 5 F 0 0 0
+            0 0 0 F 5 5 5 4 4 5 5 5 F 0 0 0
+            0 0 0 F 5 5 5 4 4 5 5 5 F 0 0 0
+            0 0 0 0 F 5 5 5 5 5 5 F 0 0 0 0
+            0 0 0 0 F F 5 5 5 5 F F 0 0 0 0
+            0 0 0 0 0 0 F F F F 0 0 0 0 0 0
+            0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+            0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+            0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
         `, SpriteKind.Coin)
         value.place(coin)
         animation.attachAnimation(coin, coinAnimation)
@@ -1163,7 +1163,7 @@ function clearGame() {
 }
 
 sprites.onOverlap(SpriteKind.Player, SpriteKind.Coin, function (sprite, otherSprite) {
-    otherSprite.destroy(effects.trail, 100)
+    otherSprite.destroy(effects.trail, 250)
     otherSprite.y += -3
     info.changeScoreBy(3)
     music.baDing.play()
