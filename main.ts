@@ -11,6 +11,7 @@ enum SpriteKind {
 enum ActionKind {
     RunningLeft,
     RunningRight,
+    Idle,
     IdleLeft,
     IdleRight,
     JumpingLeft,
@@ -37,6 +38,7 @@ let hero = sprites.create(img`
     . . . . . a a . . a a . . . . .
     . . . . . e e . . e e . . . . .
 `, SpriteKind.Player)
+let coinAnimation: animation.Animation = null;
 // how long to pause between each contact with a
 // single enemy
 let invincibilityPeriod = 500
@@ -68,8 +70,14 @@ let levelMaps = [
     `
 ]
 
+initializeAnimations()
+initializeScene()
+createPlayer(hero)
+initializeLevel(currentLevel)
+
 function initializeAnimations() {
     initializeHeroAnimations();
+    initializeCoinAnimation();
 }
 
 function initializeHeroAnimations() {
@@ -431,6 +439,136 @@ function initializeHeroAnimations() {
             0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
         `);
     }
+}
+
+function initializeCoinAnimation() {
+    coinAnimation = animation.createAnimation(ActionKind.Idle, 200)
+    coinAnimation.addAnimationFrame(img`
+    	0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 
+    	0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 
+    	0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 
+    	0 0 0 0 0 0 F F F F 0 0 0 0 0 0 
+    	0 0 0 0 F F 5 5 5 5 F F 0 0 0 0 
+    	0 0 0 0 F 5 5 5 5 5 5 F 0 0 0 0 
+    	0 0 0 F 5 5 5 4 4 5 5 5 F 0 0 0 
+    	0 0 0 F 5 5 5 4 4 5 5 5 F 0 0 0 
+    	0 0 0 F 5 5 5 4 4 5 5 5 F 0 0 0 
+    	0 0 0 F 5 5 5 4 4 5 5 5 F 0 0 0 
+    	0 0 0 0 F 5 5 5 5 5 5 F 0 0 0 0 
+    	0 0 0 0 F F 5 5 5 5 F F 0 0 0 0 
+    	0 0 0 0 0 0 F F F F 0 0 0 0 0 0 
+    	0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 
+    	0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 
+    	0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 
+    `)
+    coinAnimation.addAnimationFrame(img`
+    	0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 
+    	0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 
+    	0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 
+    	0 0 0 0 F F F F F F 0 0 0 0 0 0 
+    	0 0 0 F F 5 F 5 5 5 F 0 0 0 0 0 
+    	0 0 0 F 5 F 5 5 5 5 5 F 0 0 0 0 
+    	0 0 F 5 F 5 5 5 4 5 5 F 0 0 0 0 
+    	0 0 F 5 F 5 5 5 4 4 5 5 F 0 0 0 
+    	0 0 F 5 F 5 5 5 4 4 5 5 F 0 0 0 
+    	0 0 F 5 F 5 5 5 4 5 5 F 0 0 0 0 
+    	0 0 0 F 5 F 5 5 5 5 5 F 0 0 0 0 
+    	0 0 0 0 F 5 F 5 5 5 F 0 0 0 0 0 
+    	0 0 0 0 F F F F F F 0 0 0 0 0 0 
+    	0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 
+    	0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 
+    	0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 
+    `)
+    coinAnimation.addAnimationFrame(img`
+    	0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 
+    	0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 
+    	0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 
+    	0 0 0 0 0 F F F F F 0 0 0 0 0 0 
+    	0 0 0 0 F F 5 F 5 F F 0 0 0 0 0 
+    	0 0 0 F F 5 F 5 5 5 F 0 0 0 0 0 
+    	0 0 0 F 5 F 5 5 5 5 F F 0 0 0 0 
+    	0 0 0 F 5 F 5 5 4 5 5 F 0 0 0 0 
+    	0 0 0 F 5 F 5 5 4 5 5 F 0 0 0 0 
+    	0 0 0 F 5 F 5 5 5 5 F F 0 0 0 0 
+    	0 0 0 F F 5 F 5 5 5 F 0 0 0 0 0 
+    	0 0 0 0 F F 5 F 5 F F 0 0 0 0 0 
+    	0 0 0 0 0 F F F F F 0 0 0 0 0 0 
+    	0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 
+    	0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 
+    	0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 
+    `)
+    coinAnimation.addAnimationFrame(img`
+    	0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 
+    	0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 
+    	0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 
+    	0 0 0 0 0 0 F F F F 0 0 0 0 0 0 
+    	0 0 0 0 0 F F F F F 0 0 0 0 0 0 
+    	0 0 0 0 0 F 5 F 5 F F 0 0 0 0 0 
+    	0 0 0 0 0 F 5 F 5 5 F 0 0 0 0 0 
+    	0 0 0 0 0 F 5 F 5 5 F 0 0 0 0 0 
+    	0 0 0 0 0 F 5 F 5 5 F 0 0 0 0 0 
+    	0 0 0 0 0 F 5 F 5 5 F 0 0 0 0 0 
+    	0 0 0 0 0 F 5 F 5 F F 0 0 0 0 0 
+    	0 0 0 0 0 F F F F F 0 0 0 0 0 0 
+    	0 0 0 0 0 0 F F F F 0 0 0 0 0 0 
+    	0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 
+    	0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 
+    	0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 
+    `)
+    coinAnimation.addAnimationFrame(img`
+    	0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 
+    	0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 
+    	0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 
+    	0 0 0 0 0 0 F F F F 0 0 0 0 0 0 
+    	0 0 0 0 0 0 F F F F F 0 0 0 0 0 
+    	0 0 0 0 0 F F 5 F 5 F 0 0 0 0 0 
+    	0 0 0 0 0 F 5 5 F 5 F 0 0 0 0 0 
+    	0 0 0 0 0 F 5 5 F 5 F 0 0 0 0 0 
+    	0 0 0 0 0 F 5 5 F 5 F 0 0 0 0 0 
+    	0 0 0 0 0 F 5 5 F 5 F 0 0 0 0 0 
+    	0 0 0 0 0 F F 5 F 5 F 0 0 0 0 0 
+    	0 0 0 0 0 0 F F F F F 0 0 0 0 0 
+    	0 0 0 0 0 0 F F F F 0 0 0 0 0 0 
+    	0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 
+    	0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 
+    	0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 
+    `)
+    coinAnimation.addAnimationFrame(img`
+    	0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 
+    	0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 
+    	0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 
+    	0 0 0 0 0 0 F F F F F 0 0 0 0 0 
+    	0 0 0 0 0 F F 5 F 5 F F 0 0 0 0 
+    	0 0 0 0 0 F 5 5 5 F 5 F F 0 0 0 
+    	0 0 0 0 F F 5 5 5 5 F 5 F 0 0 0 
+    	0 0 0 0 F 5 5 4 5 5 F 5 F 0 0 0 
+    	0 0 0 0 F 5 5 4 5 5 F 5 F 0 0 0 
+    	0 0 0 0 F F 5 5 5 5 F 5 F 0 0 0 
+    	0 0 0 0 0 F 5 5 5 F 5 F F 0 0 0 
+    	0 0 0 0 0 F F 5 F 5 F F 0 0 0 0 
+    	0 0 0 0 0 0 F F F F F 0 0 0 0 0 
+    	0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 
+    	0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 
+    	0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 
+    `)
+    coinAnimation.addAnimationFrame(img`
+    	0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 
+    	0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 
+    	0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 
+    	0 0 0 0 0 0 F F F F F F 0 0 0 0 
+    	0 0 0 0 0 F 5 5 5 F 5 F F 0 0 0 
+    	0 0 0 0 F 5 5 5 5 5 F 5 F 0 0 0 
+    	0 0 0 0 F 5 5 4 5 5 5 F 5 F 0 0 
+    	0 0 0 F 5 5 4 4 5 5 5 F 5 F 0 0 
+    	0 0 0 F 5 5 4 4 5 5 5 F 5 F 0 0 
+    	0 0 0 0 F 5 5 4 5 5 5 F 5 F 0 0 
+    	0 0 0 0 F 5 5 5 5 5 F 5 F 0 0 0 
+    	0 0 0 0 0 F 5 5 5 F 5 F 0 0 0 0 
+    	0 0 0 0 0 0 F F F F F F 0 0 0 0 
+    	0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 
+    	0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 
+    	0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 
+    `)
 }
 
 // set up hero animations
@@ -989,24 +1127,26 @@ function spawnGoals() {
     `, SpriteKind.Goal), 14)
     for (let value of scene.getTilesByType(5)) {
         let coin = sprites.create(img`
-            . . . . . . . . . . . . . . . .
-            . . . . . . . . . . . . . . . .
-            . . . . . 5 5 5 5 5 5 5 . . . .
-            . . . . 5 5 5 5 e 5 5 5 5 . . .
-            . . . 5 5 5 e e e e e 5 5 5 . .
-            . . . 5 5 5 e 5 5 5 e 5 5 5 . .
-            . . . 5 5 5 e 5 5 5 5 5 5 5 . .
-            . . . 5 5 5 e 5 5 5 5 5 5 5 . .
-            . . . 5 5 5 e 5 5 5 5 5 5 5 . .
-            . . . 5 5 5 e 5 5 5 e 5 5 5 . .
-            . . . 5 5 5 e e e e e 5 5 5 . .
-            . . . . 5 5 5 5 e 5 5 5 5 . . .
-            . . . . . 5 5 5 5 5 5 5 . . . .
-            . . . . . . . . . . . . . . . .
-            . . . . . . . . . . . . . . . .
-            . . . . . . . . . . . . . . . .
+            0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 
+            0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 
+            0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 
+            0 0 0 0 0 0 F F F F 0 0 0 0 0 0 
+            0 0 0 0 F F 5 5 5 5 F F 0 0 0 0 
+            0 0 0 0 F 5 5 5 5 5 5 F 0 0 0 0 
+            0 0 0 F 5 5 5 4 4 5 5 5 F 0 0 0 
+            0 0 0 F 5 5 5 4 4 5 5 5 F 0 0 0 
+            0 0 0 F 5 5 5 4 4 5 5 5 F 0 0 0 
+            0 0 0 F 5 5 5 4 4 5 5 5 F 0 0 0 
+            0 0 0 0 F 5 5 5 5 5 5 F 0 0 0 0 
+            0 0 0 0 F F 5 5 5 5 F F 0 0 0 0 
+            0 0 0 0 0 0 F F F F 0 0 0 0 0 0 
+            0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 
+            0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 
+            0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 
         `, SpriteKind.Coin)
         value.place(coin)
+        animation.attachAnimation(coin, coinAnimation)
+        animation.setAction(coin, ActionKind.Idle);
     }
 }
 
@@ -1029,10 +1169,6 @@ sprites.onOverlap(SpriteKind.Player, SpriteKind.Coin, function (sprite, otherSpr
     music.baDing.play()
 })
 
-initializeScene()
-createPlayer(hero)
-initializeLevel(currentLevel)
-initializeAnimations()
 
 // bumper movement
 game.onUpdate(function () {
