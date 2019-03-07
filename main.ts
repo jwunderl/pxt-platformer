@@ -7,11 +7,13 @@ enum SpriteKind {
     Goal,
     Coin
 }
+
 enum ActionKind {
     Walking,
     Idle,
     Jumping
 }
+
 let playerBenefit = 0
 let coin: Sprite = null
 let hero: Sprite = null
@@ -24,10 +26,8 @@ let bumper: Sprite = null
 let currentLevel = 0
 let mainCharacterWalking: animation.Animation = null
 let levelMaps: Image[] = []
-let otherSprite: Sprite = null
-let sprite: Sprite = null
-// Describe this function...
-function initializeAnimations2() {
+
+function initializeAnimations() {
     mainCharacterWalking = animation.createAnimation(ActionKind.Walking, 125)
     mainCharacterWalking.addAnimationFrame(img`
         . . . . . . . . . . . . . . . .
@@ -50,6 +50,7 @@ function initializeAnimations2() {
     animation.attachAnimation(hero, mainCharacterWalking)
     animation.setAction(hero, ActionKind.Walking)
 }
+
 sprites.onOverlap(SpriteKind.Player, SpriteKind.Bumper, function (sprite, otherSprite) {
     if (sprite.bottom - playerBenefit < otherSprite.y) {
         otherSprite.destroy(effects.ashes, 250)
@@ -63,10 +64,10 @@ sprites.onOverlap(SpriteKind.Player, SpriteKind.Bumper, function (sprite, otherS
     }
     pause(invincibilityPeriod)
 })
-// Describe this function...
-function createEnemies2() {
+
+function createEnemies() {
     // enemy that moves back and forth
-    for (let value4 of scene.getTilesByType(2)) {
+    for (let value of scene.getTilesByType(2)) {
         bumper = sprites.create(img`
             . . . . . . . . . . . . . . . .
             . . . . . . . . . . . . . . . .
@@ -85,7 +86,7 @@ function createEnemies2() {
             . . . . . . . . . . . . . . . .
             . . . . . . . . . . . . . . . .
         `, SpriteKind.Bumper)
-        value4.place(bumper)
+        value.place(bumper)
         bumper.ay = gravity
         if (Math.percentChance(50)) {
             bumper.vx = 40
@@ -94,34 +95,35 @@ function createEnemies2() {
         }
     }
 }
-// Describe this function...
-function createPlayer2(player2: Sprite) {
-    player2.ay = gravity
-    scene.cameraFollowSprite(player2)
-    controller.moveSprite(player2, 100, 0)
-    player2.z = 5
+
+function createPlayer(player: Sprite) {
+    player.ay = gravity
+    scene.cameraFollowSprite(player)
+    controller.moveSprite(player, 100, 0)
+    player.z = 5
     info.setLife(3)
     info.setScore(0)
 }
+
 sprites.onOverlap(SpriteKind.Player, SpriteKind.Goal, function (sprite, otherSprite) {
     currentLevel += 1
     if (currentLevel < levelMaps.length) {
         game.splash("Next level unlocked!")
-        initializeLevel2(currentLevel)
+        initializeLevel(currentLevel)
     } else {
         game.over(true, effects.confetti)
     }
 })
-// jumping
+
 controller.up.onEvent(ControllerButtonEvent.Pressed, function () {
-    attemptJump2()
+    attemptJump()
 })
-// jumping
+
 controller.A.onEvent(ControllerButtonEvent.Pressed, function () {
-    attemptJump2()
+    attemptJump()
 })
-// Describe this function...
-function attemptJump2() {
+
+function attemptJump() {
     // else if: either fell off a ledge, or double jumping
     if (hero.isHittingTile(CollisionDirection.Bottom)) {
         hero.vy = -4 * pixelsToMeters
@@ -137,17 +139,18 @@ function attemptJump2() {
         canDoubleJump = false
     }
 }
-// Describe this function...
-function initializeLevel2(level: number) {
-    clearGame2()
+
+function initializeLevel(level: number) {
+    clearGame()
     scene.setTileMap(levelMaps[level])
     effects.clouds.startScreenEffect()
     scene.placeOnRandomTile(hero, 1)
-    createEnemies2()
-    spawnGoals2()
+    createEnemies()
+    spawnGoals()
 }
+
 // Uncommented tiles are unused
-function initializeScene2() {
+function initializeScene() {
     scene.setBackgroundImage(img`
         9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9
         9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9
@@ -548,8 +551,8 @@ function initializeScene2() {
         e d e e e e e e e d e e e e e e
     `, true)
 }
-// Describe this function...
-function spawnGoals2() {
+
+function spawnGoals() {
     scene.placeOnRandomTile(sprites.create(img`
         . . . . . . . . . . . . . . . .
         . . . . . . . . . . . . . . . .
@@ -590,41 +593,49 @@ function spawnGoals2() {
         value.place(coin)
     }
 }
-// Describe this function...
-function clearGame2() {
-    for (let value2 of sprites.allOfKind(SpriteKind.Bumper)) {
-        value2.destroy()
+
+function clearGame() {
+    for (let value of sprites.allOfKind(SpriteKind.Bumper)) {
+        value.destroy()
     }
-    for (let value3 of sprites.allOfKind(SpriteKind.Coin)) {
-        value3.destroy()
+    for (let value of sprites.allOfKind(SpriteKind.Coin)) {
+        value.destroy()
+    }
+    for (let value of sprites.allOfKind(SpriteKind.Goal)) {
+        value.destroy()
     }
 }
+
 sprites.onOverlap(SpriteKind.Player, SpriteKind.Coin, function (sprite, otherSprite) {
     otherSprite.destroy(effects.smiles, 25)
     otherSprite.y += -3
     info.changeScoreBy(3)
     music.baDing.play()
 })
-levelMaps = [img`
-    . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
-    . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 5 . 5 . . . . . . . . .
-    . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 5 5 6 . 6 5 . . . . . . . .
-    . . . . . . . . 5 . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 5 5 5 5 . 6 6 6 . 6 6 . . . . . . . .
-    . . . . 5 . . . . . 5 5 . . . . . . . . . . . . . . . . . . . . . . . . . . . . 5 5 5 5 . 6 6 6 6 . . . . . . . . . . . . . . .
-    . . . . . . . . 6 . . . . 6 . . . . . . . . . . . . . . . . . 6 . . . . . . . . 6 6 6 6 . . . . . . . . . . . . . . . . . . . .
-    . 1 . . 6 . . . 7 . 2 . . 7 . . . 2 6 . 2 . . 2 . 6 . . . . . 7 . . . . . e . . . . . . . . . . . . . . . . . . . . . . . . . .
-    f f f f 7 f f f 7 f f f f 7 f f f f 7 f f f f f f 7 f f f f f 7 f f f f f f f f f f f f f f f f f f f f f f f f f f f f f f f f
-`, img`
-    . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
-    . . . . . . . . . . . . . . . . . . . . . 6 . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
-    . . . . . . . . . . . . . . . . . . . 6 5 7 . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
-    . . . . . . . 6 6 . 6 . . . . . . 6 . 7 5 7 . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
-    . . . . . . 6 7 7 . 7 . . . . 6 . 7 . 7 5 7 . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 5 5 5 . . 5 5 5
-    . . . . . 6 7 7 7 . 7 . . 6 . 7 5 7 5 7 5 7 . . . 5 5 5 5 5 5 5 . . . . . . . . . . . . . . . . . . . . . . . . 5 5 5 . . 5 5 5
-    . 1 . . . . . . 2 . 7 . . 7 . 2 . . . 2 5 7 . . . . . . . . . . . . . . . e . . . . . . . . . . . . . . . . . . 5 5 5 . . 5 5 5
-    f f f f f f f f f f 7 f f f f f f f f f f 7 f f f f f f f f f f f f f f f f f f f f f f f f f f f f f f f f f f f f f f f f f f
-`]
-initializeScene2()
+
+levelMaps = [
+    img`
+        . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+        . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 5 . 5 . . . . . . . . .
+        . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 5 5 6 . 6 5 . . . . . . . .
+        . . . . . . . . 5 . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 5 5 5 5 . 6 6 6 . 6 6 . . . . . . . .
+        . . . . 5 . . . . . 5 5 . . . . . . . . . . . . . . . . . . . . . . . . . . . . 5 5 5 5 . 6 6 6 6 . . . . . . . . . . . . . . .
+        . . . . . . . . 6 . . . . 6 . . . . . . . . . . . . . . . . . 6 . . . . . . . . 6 6 6 6 . . . . . . . . . . . . . . . . . . . .
+        . 1 . . 6 . . . 7 . 2 . . 7 . . . 2 6 . 2 . . 2 . 6 . . . . . 7 . . . . . e . . . . . . . . . . . . . . . . . . . . . . . . . .
+        f f f f 7 f f f 7 f f f f 7 f f f f 7 f f f f f f 7 f f f f f 7 f f f f f f f f f f f f f f f f f f f f f f f f f f f f f f f f
+    `, img`
+        . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+        . . . . . . . . . . . . . . . . . . . . . 6 . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+        . . . . . . . . . . . . . . . . . . . 6 5 7 . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+        . . . . . . . 6 6 . 6 . . . . . . 6 . 7 5 7 . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+        . . . . . . 6 7 7 . 7 . . . . 6 . 7 . 7 5 7 . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 5 5 5 . . 5 5 5
+        . . . . . 6 7 7 7 . 7 . . 6 . 7 5 7 5 7 5 7 . . . 5 5 5 5 5 5 5 . . . . . . . . . . . . . . . . . . . . . . . . 5 5 5 . . 5 5 5
+        . 1 . . . . . . 2 . 7 . . 7 . 2 . . . 2 5 7 . . . . . . . . . . . . . . . e . . . . . . . . . . . . . . . . . . 5 5 5 . . 5 5 5
+        f f f f f f f f f f 7 f f f f f f f f f f 7 f f f f f f f f f f f f f f f f f f f f f f f f f f f f f f f f f f f f f f f f f f
+    `
+]
+
+initializeScene()
 pixelsToMeters = 30
 gravity = 9.81 * pixelsToMeters
 // how long to pause between each contact with a
@@ -652,19 +663,21 @@ hero = sprites.create(img`
     . . . . . a a . . a a . . . . .
     . . . . . e e . . e e . . . . .
 `, SpriteKind.Player)
-createPlayer2(hero)
-initializeLevel2(currentLevel)
-initializeAnimations2()
+createPlayer(hero)
+initializeLevel(currentLevel)
+initializeAnimations()
+
 // bumper movement
 game.onUpdate(function () {
-    for (let value5 of sprites.allOfKind(SpriteKind.Bumper)) {
-        if (value5.isHittingTile(CollisionDirection.Left)) {
-            value5.vx = 40
-        } else if (value5.isHittingTile(CollisionDirection.Right)) {
-            value5.vx = -40
+    for (let value of sprites.allOfKind(SpriteKind.Bumper)) {
+        if (value.isHittingTile(CollisionDirection.Left)) {
+            value.vx = 40
+        } else if (value.isHittingTile(CollisionDirection.Right)) {
+            value.vx = -40
         }
     }
 })
+
 // Reset double jump when standing on wall
 game.onUpdate(function () {
     if (hero.isHittingTile(CollisionDirection.Bottom)) {
