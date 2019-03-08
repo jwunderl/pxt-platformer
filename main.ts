@@ -641,11 +641,11 @@ sprites.onOverlap(SpriteKind.Player, SpriteKind.Bumper, function (sprite, otherS
         otherSprite.destroy(effects.ashes, 250)
         otherSprite.vy = -50
         info.changeScoreBy(1)
-        music.powerUp.play()
+        // music.powerUp.play()
     } else {
         info.changeLifeBy(-1)
         sprite.say("Ow!", invincibilityPeriod)
-        music.powerDown.play()
+        // music.powerDown.play()
     }
     pause(invincibilityPeriod)
 })
@@ -1204,7 +1204,7 @@ sprites.onOverlap(SpriteKind.Player, SpriteKind.Coin, function (sprite, otherSpr
     otherSprite.destroy(effects.trail, 250)
     otherSprite.y += -3
     info.changeScoreBy(3)
-    music.baDing.play()
+    // music.baDing.play()
 })
 
 
