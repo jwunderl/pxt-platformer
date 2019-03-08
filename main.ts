@@ -596,7 +596,7 @@ game.onUpdate(function () {
         } else {
             animation.setAction(hero, ActionKind.CrouchRight);
         }
-    } else if (hero.vy < 20) {
+    } else if (hero.vy < 20 && hero.ay != 0) {
         if (heroFacingLeft) {
             animation.setAction(hero, ActionKind.JumpingLeft)
         } else {
