@@ -78,6 +78,36 @@ let levelMaps = [
         . . . . . 6 . . 7 . 7 . 5 5 5 . . . . . . . . . . . . . . 5 5 5
         . 1 . 6 . 7 . 2 2 . 7 . 5 5 5 . . . . . . . . . e . . . . 5 5 5
         f f f 7 f 7 f f f f 7 f f f f f f f f f f f f f f f f f f f f f
+    `,
+    img`
+        . . . . . . . . . . . 7 . . . . . . . . . . . . . . . . . . . .
+        . . . . . . . . . . . 7 . . . . . . . . . . . . . . . . . . . .
+        . . . . . . . 6 . . . 7 . . . . . . . . . . . . . . . . . . . .
+        . . . . . 6 . 7 . . . . . . . . . . . . . . . . . . . . . . . .
+        . . . . 6 7 6 7 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 .
+        . . . 6 . . 5 . . 5 . 5 . . 5 . 5 . . 5 . 5 . . . 5 . . . 5 . .
+        . 1 . 7 e . . 2 . 2 . . . 2 . . . . . 2 . . . 2 . . . 2 . . . 6
+        f f f 7 f f f f f f f f f f f f f f f f f f f f f f f f f f f 7
+    `,
+    img`
+        . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+        . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+        . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+        . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+        . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+        . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+        . 1 . . . . . . . . . . . . . . . . . . . . . . . . . . . e . .
+        f f f f f f f f f f f f f f f f f f f f f f f f f f f f f f f f
+    `,
+    img`
+        . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+        . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+        . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+        . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+        . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+        . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+        . 1 . . . . . . . . . . . . . . . . . . . . . . . . . . . . e .
+        f f f f f f f f f f f f f f f f f f f f f f f f f f f f f f f f
     `
 ]
 
@@ -677,6 +707,12 @@ sprites.onOverlap(SpriteKind.Player, SpriteKind.Goal, function (sprite, otherSpr
         initializeLevel(currentLevel)
     } else {
         game.over(true, effects.confetti)
+    }
+})
+
+controller.down.onEvent(ControllerButtonEvent.Pressed, function () {
+    if (!hero.isHittingTile(CollisionDirection.Bottom)) {
+        hero.vy += 80;
     }
 })
 
