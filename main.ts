@@ -41,7 +41,7 @@ let hero = sprites.create(img`
 let coinAnimation: animation.Animation = null;
 // how long to pause between each contact with a
 // single enemy
-let invincibilityPeriod = 500
+let invincibilityPeriod = 750
 let pixelsToMeters = 30
 let canDoubleJump = false
 let gravity = 9.81 * pixelsToMeters
@@ -637,7 +637,7 @@ game.onUpdate(function () {
 
 
 sprites.onOverlap(SpriteKind.Player, SpriteKind.Bumper, function (sprite, otherSprite) {
-    if (sprite.vy > 0 && !sprite.isHittingTile(CollisionDirection.Bottom)) {
+    if ((sprite.vy > 0 && !sprite.isHittingTile(CollisionDirection.Bottom)) || sprite.y < otherSprite.top) {
         otherSprite.destroy(effects.ashes, 250)
         otherSprite.vy = -50
         info.changeScoreBy(1)
@@ -691,6 +691,7 @@ function createPlayer(player: Sprite) {
 }
 
 sprites.onOverlap(SpriteKind.Player, SpriteKind.Goal, function (sprite, otherSprite) {
+    info.changeLifeBy(1)
     currentLevel += 1
     if (currentLevel < levelMaps.length) {
         game.splash("Next level unlocked!")
