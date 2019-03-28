@@ -5,8 +5,7 @@
     "dependencies": {
         "device": "*",
         "animation": "*",
-        "pxt-platformer-sprite-sheet": "github:jwunderl/pxt-platformer-sprite-sheet#v0.0.4",
-        "pxt-cloudy-background": "github:jwunderl/pxt-cloudy-background#v0.0.7"
+        "pxt-platformer-sprite-sheet": "github:jwunderl/pxt-platformer-sprite-sheet#v0.0.4"
     },
     "files": [
         "README.md",
