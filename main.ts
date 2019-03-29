@@ -112,6 +112,13 @@ function initializeAnimations() {
 }
 
 function initializeHeroAnimations() {
+    animateRun();
+    animateIdle();
+    animateCrouch();
+    animateJumps();
+}
+
+function animateRun() {
     let mainRunLeft = animation.createAnimation(ActionKind.RunningLeft, 100)
     animation.attachAnimation(hero, mainRunLeft)
     mainRunLeft.addAnimationFrame(img`
@@ -262,7 +269,8 @@ function initializeHeroAnimations() {
         . . . . . . . f f f . f f f . .
     `)
 
-    /** idle **/
+}
+function animateIdle() {
     let mainIdleLeft = animation.createAnimation(ActionKind.IdleLeft, 100);
     animation.attachAnimation(hero, mainIdleLeft)
     mainIdleLeft.addAnimationFrame(img`
@@ -304,52 +312,9 @@ function initializeHeroAnimations() {
         . . . f b a a f f b a a f . . .
         . . . . f f f . . f f f . . . .
     `);
+}
 
-    /** crouch */
-
-    let mainCrouchLeft = animation.createAnimation(ActionKind.CrouchLeft, 100);
-    animation.attachAnimation(hero, mainCrouchLeft);
-    mainCrouchLeft.addAnimationFrame(img`
-        . . . . . . . . . . . . . . . .
-        . . . . . . . . . . . . . . . .
-        . . . . . . . . . . . . . . . .
-        . . . f f f f f f f f f f . . .
-        . . f e e e e e e e e e e f . .
-        . f e e e e e e e e e e e e f .
-        . f d d d d d d d d d e e d f .
-        . f d d f d d d d f d d e d f .
-        . f d d f d d d d f d d d e f .
-        . f d d f d d d d f d d d f . .
-        . f d d d d d d d d d d d f . .
-        . f a c c c c c c c c a b f . .
-        . f d c c c c c c c c c d d f .
-        f d d f f f b b f f f f d d f .
-        . f f a a a a a a a a a b f . .
-        . . . f f f f . f f f f f . . .
-    `);
-
-    let mainCrouchRight = animation.createAnimation(ActionKind.CrouchRight, 100);
-    animation.attachAnimation(hero, mainCrouchRight);
-    mainCrouchRight.addAnimationFrame(img`
-        . . . . . . . . . . . . . . . .
-        . . . . . . . . . . . . . . . .
-        . . . . . . . . . . . . . . . .
-        . . . f f f f f f f f f f . . .
-        . . f e e e e e e e e e e f . .
-        . f e e e e e e e e e e e e f .
-        . f d e e d d d d d d d d d f .
-        . f d e d d f d d d d f d d f .
-        . f e d d d f d d d d f d d f .
-        . . f d d d f d d d d f d d f .
-        . . f d d d d d d d d d d d f .
-        . . f b a c c c c c c c c a f .
-        . f d d c c c c c c c c c d f .
-        . f d d f f f f b b f f f d d f
-        . . f b a a a a a a a a a f f .
-        . . . f f f f f . f f f f . . .
-    `);
-
-    /** jumping **/
+function animateJumps() {
     // Because there isn't currently an easy way to say "play this animation a single time
     // and stop at the end", this just adds a bunch of the same frame at the end to accomplish
     // the same behavior
@@ -470,6 +435,52 @@ function initializeHeroAnimations() {
             . . . . . . . . . . . . . . . .
         `);
     }
+}
+
+function animateCrouch() {
+    /** crouch */
+
+    let mainCrouchLeft = animation.createAnimation(ActionKind.CrouchLeft, 100);
+    animation.attachAnimation(hero, mainCrouchLeft);
+    mainCrouchLeft.addAnimationFrame(img`
+        . . . . . . . . . . . . . . . .
+        . . . . . . . . . . . . . . . .
+        . . . . . . . . . . . . . . . .
+        . . . f f f f f f f f f f . . .
+        . . f e e e e e e e e e e f . .
+        . f e e e e e e e e e e e e f .
+        . f d d d d d d d d d e e d f .
+        . f d d f d d d d f d d e d f .
+        . f d d f d d d d f d d d e f .
+        . f d d f d d d d f d d d f . .
+        . f d d d d d d d d d d d f . .
+        . f a c c c c c c c c a b f . .
+        . f d c c c c c c c c c d d f .
+        f d d f f f b b f f f f d d f .
+        . f f a a a a a a a a a b f . .
+        . . . f f f f . f f f f f . . .
+    `);
+
+    let mainCrouchRight = animation.createAnimation(ActionKind.CrouchRight, 100);
+    animation.attachAnimation(hero, mainCrouchRight);
+    mainCrouchRight.addAnimationFrame(img`
+        . . . . . . . . . . . . . . . .
+        . . . . . . . . . . . . . . . .
+        . . . . . . . . . . . . . . . .
+        . . . f f f f f f f f f f . . .
+        . . f e e e e e e e e e e f . .
+        . f e e e e e e e e e e e e f .
+        . f d e e d d d d d d d d d f .
+        . f d e d d f d d d d f d d f .
+        . f e d d d f d d d d f d d f .
+        . . f d d d f d d d d f d d f .
+        . . f d d d d d d d d d d d f .
+        . . f b a c c c c c c c c a f .
+        . f d d c c c c c c c c c d f .
+        . f d d f f f f b b f f f d d f
+        . . f b a a a a a a a a a f f .
+        . . . f f f f f . f f f f . . .
+    `);
 }
 
 function initializeCoinAnimation() {
