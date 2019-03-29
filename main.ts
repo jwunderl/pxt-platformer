@@ -1147,21 +1147,21 @@ function initializeScene() {
 function spawnGoals() {
     scene.placeOnRandomTile(sprites.create(img`
         . . . . . . . . . . . . . . . .
-        . . . . . . . . . . . . . . . .
-        . . . . . . . 2 2 2 2 . . . . .
-        . . . . . . . 2 3 3 2 2 2 . . .
-        . . . . . . . 2 3 2 2 2 2 2 . .
-        . . . . . . . 3 2 2 2 2 2 . . .
-        . . . . . . . 2 2 2 2 . . . . .
-        . . . . . . . b d . . . . . . .
-        . . . . . . . b d . . . . . . .
-        . . . . . . . b d . . . . . . .
-        . . . . . . . b d . . . . . . .
-        . . . . . . . b d . . . . . . .
-        . . . . . . . d d . . . . . . .
-        . . . . . . f f f f . . . . . .
+        . . . . . . . f f f f . . . . .
+        . . . . . . f 2 2 2 2 f f . . .
+        . . . . . . f 2 3 3 2 2 2 f . .
+        . . . . . . f 2 3 2 2 2 2 2 f .
+        . . . . . . f 3 2 2 2 2 2 f . .
+        . . . . . . f 2 2 2 2 f f . . .
+        . . . . . . f b d f f . . . . .
+        . . . . . . f b d f . . . . . .
+        . . . . . . f b d f . . . . . .
+        . . . . . . f b d f . . . . . .
+        . . . . . . f b d f . . . . . .
+        . . . . . . f d d f . . . . . .
         . . . . . f f f f f f . . . . .
         . . . . f f f f f f f f . . . .
+        . . . f f f f f f f f f f . . .
     `, SpriteKind.Goal), 14)
     for (let value of scene.getTilesByType(5)) {
         let coin = sprites.create(img`
