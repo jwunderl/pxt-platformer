@@ -674,9 +674,9 @@ function createEnemies() {
         value.place(bumper)
         bumper.ay = gravity
         if (Math.percentChance(50)) {
-            bumper.vx = 40
+            bumper.vx = Math.randomRange(30, 60);
         } else {
-            bumper.vx = -40
+            bumper.vx = Math.randomRange(-60, -30);
         }
     }
 }
@@ -1212,9 +1212,9 @@ sprites.onOverlap(SpriteKind.Player, SpriteKind.Coin, function (sprite, otherSpr
 game.onUpdate(function () {
     for (let value of sprites.allOfKind(SpriteKind.Bumper)) {
         if (value.isHittingTile(CollisionDirection.Left)) {
-            value.vx = 40
+            value.vx = Math.randomRange(30, 60);
         } else if (value.isHittingTile(CollisionDirection.Right)) {
-            value.vx = -40
+            value.vx = Math.randomRange(-60, -30);
         }
     }
 })
