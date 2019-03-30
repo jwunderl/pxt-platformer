@@ -4,8 +4,7 @@
     "description": "",
     "dependencies": {
         "device": "*",
-        "animation": "*",
-        "pxt-platformer-sprite-sheet": "github:jwunderl/pxt-platformer-sprite-sheet#v0.0.4"
+        "animation": "*"
     },
     "files": [
         "README.md",
