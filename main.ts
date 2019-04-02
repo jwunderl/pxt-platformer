@@ -1088,20 +1088,20 @@ function initializeScene() {
     // rock
     scene.setTile(7, img`
         f f f f f f f f f f f f f f f f
-        f f c c b b d d c b b b b d f f
-        f c c c b b d c c b c c b d c f
-        f c c b b b d d c c c b d c c f
-        f c b b b c c c b c c c c c c f
-        f d d c c d c b b d c c c c b f
-        f d c c d d b b d c b b b b d f
-        f c b b c c c d d c b d c d d f
-        f b b d c d c c b b b c d d c f
-        f c c c d d c b b c b b d c c f
-        f c b b d d c c c c b b d b d f
-        f b b c c d d c c b c c c c b f
-        f b d d c c b d c c d c c b d f
-        f d c c c b d c c d b c d c b f
-        f f b b b d c c d b d d d b f f
+        f f 2 2 2 2 2 2 2 f 2 2 2 2 f f
+        f 2 2 2 2 2 2 2 2 f 2 2 2 2 2 f
+        f 2 2 2 2 2 2 2 2 f 2 2 2 2 2 f
+        f 2 2 2 2 2 2 2 2 f 2 2 2 2 2 f
+        f f f f f f f f f f f f f f f f
+        f 2 2 2 2 f 2 2 2 2 2 2 2 2 2 f
+        f 2 2 2 2 f 2 2 2 2 4 4 2 2 2 f
+        f 2 2 2 2 f 2 2 2 4 4 2 2 2 2 f
+        f 2 2 2 2 f 2 2 2 2 2 2 2 2 2 f
+        f f f f f f f f f f f f f f f f
+        f 2 2 2 2 2 2 2 2 f 2 2 2 2 2 f
+        f 2 2 2 4 2 2 2 2 f 2 2 2 2 2 f
+        f 2 2 4 2 2 2 2 2 f 2 2 2 2 2 f
+        f f 2 2 2 2 2 2 2 f 2 2 2 2 f f
         f f f f f f f f f f f f f f f f
     `, true)
     scene.setTile(8, img`
