@@ -617,7 +617,7 @@ function initializeCoinAnimation() {
 }
 
 function initializeFlierAnimations() {
-    flierFlying = animation.createAnimation(ActionKind.Flying, 200)
+    flierFlying = animation.createAnimation(ActionKind.Flying, 100)
     flierFlying.addAnimationFrame(img`
         . . . . . . . . . . . . . . . .
         . . . . . . . . . . . . . . . .
@@ -654,7 +654,7 @@ function initializeFlierAnimations() {
         . . . . . . . . . . . . . . . .
         . . . . . . . . . . . . . . . .
     `)
-    flierIdle = animation.createAnimation(ActionKind.Idle, 200)
+    flierIdle = animation.createAnimation(ActionKind.Idle, 100)
     flierFlying.addAnimationFrame(img`
         . . . . . . . . . . . . . . . .
         . . . . . . . . . . . . . . . .
