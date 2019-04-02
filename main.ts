@@ -5,7 +5,8 @@ enum SpriteKind {
     Enemy,
     Bumper,
     Goal,
-    Coin
+    Coin,
+    Flier
 }
 
 enum ActionKind {
@@ -17,7 +18,8 @@ enum ActionKind {
     JumpingLeft,
     JumpingRight,
     CrouchLeft,
-    CrouchRight
+    CrouchRight,
+    Flying
 }
 
 let hero = sprites.create(img`
@@ -39,9 +41,11 @@ let hero = sprites.create(img`
     . . . . . e e . . e e . . . . .
 `, SpriteKind.Player)
 let coinAnimation: animation.Animation = null;
+let flierFlying: animation.Animation = null;
+let flierIdle: animation.Animation = null;
 // how long to pause between each contact with a
 // single enemy
-let invincibilityPeriod = 750
+let invincibilityPeriod = 1000
 let pixelsToMeters = 30
 let canDoubleJump = false
 let gravity = 9.81 * pixelsToMeters
@@ -84,20 +88,20 @@ let levelMaps = [
         . . . . . . . . . . . 7 . . . . . . . . . . . . . . . . . . . .
         . . . . . . . 7 . . . 7 . . . . . . . . . . . . . . . . . . . .
         . . . . . 7 . 7 . . . . . . . . . . . . . . . . . . . . . . . .
-        . . . . 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 .
+        . . . 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 .
         . . . 7 . . 5 . . 5 . 5 . . 5 . 5 . . 5 . 5 . . . 5 . . . 5 . .
-        . 1 . 7 e . . 2 . 2 . . . 2 . . . . . 2 . . . 2 . . . 2 . . . 7
+        . 1 7 7 e . . 2 . 2 . . . 2 . . . . . 2 . . . 2 . . . 2 . . . 7
         f f f 7 f f f f f f f f f f f f f f f f f f f f f f f f f f f 7
     `,
     img`
         . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
         . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
         . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
-        . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
-        . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
-        . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
-        . 1 . . . . . . . . . . . . . . . . . . . . . . . . . . . e . .
-        f f f f f f f f f f f f f f f f f f f f f f f f f f f f f f f f
+        . . . . . . . . . . . . . . . . . . . . . . . . 5 5 5 . . . . .
+        . . . . . 5 . 5 . . . . . 5 5 . . 7 7 7 7 . 7 . . . . . . . . .
+        . . . . . . . . . 5 5 5 . . . 5 7 5 5 5 5 . 7 . . . . . . . . .
+        . 1 . 7 2 2 2 2 2 2 7 2 2 2 2 2 7 2 2 2 2 2 7 . . . . . . e . .
+        f f f 7 f f f f f f 7 f f f f f 7 f f f f f 7 f f f f f f f f f
     `
 ]
 
@@ -109,6 +113,7 @@ initializeLevel(currentLevel)
 function initializeAnimations() {
     initializeHeroAnimations();
     initializeCoinAnimation();
+    initializeFlierAnimations();
 }
 
 function initializeHeroAnimations() {
@@ -611,6 +616,13 @@ function initializeCoinAnimation() {
     `)
 }
 
+function initializeFlierAnimations() {
+    flierFlying = animation.createAnimation(ActionKind.Flying, 200)
+    flierFlying.addAnimationFrame(img`1`)
+    flierIdle = animation.createAnimation(ActionKind.Idle, 200)
+    flierFlying.addAnimationFrame(img`1`)
+}
+
 // set up hero animations
 game.onUpdate(function () {
     if (hero.vx < 0) {
@@ -644,7 +656,6 @@ game.onUpdate(function () {
     }
 })
 
-
 sprites.onOverlap(SpriteKind.Player, SpriteKind.Bumper, function (sprite, otherSprite) {
     if ((sprite.vy > 0 && !sprite.isHittingTile(CollisionDirection.Bottom)) || sprite.y < otherSprite.top) {
         otherSprite.destroy(effects.ashes, 250)
@@ -656,6 +667,13 @@ sprites.onOverlap(SpriteKind.Player, SpriteKind.Bumper, function (sprite, otherS
         sprite.say("Ow!", invincibilityPeriod)
         music.powerDown.play()
     }
+    pause(invincibilityPeriod)
+})
+
+sprites.onOverlap(SpriteKind.Player, SpriteKind.Flier, function (sprite: Sprite, otherSprite: Sprite) {
+    info.changeLifeBy(-1)
+    sprite.say("Ow!", invincibilityPeriod)
+    music.powerDown.play()
     pause(invincibilityPeriod)
 })
 
@@ -687,6 +705,14 @@ function createEnemies() {
         } else {
             bumper.vx = Math.randomRange(-60, -30);
         }
+    }
+
+    // enemy that flies at player
+    for (let value of scene.getTilesByType(3)) {
+        let flier = sprites.create(img`1`)
+        value.place(flier);
+        animation.attachAnimation(flier, flierFlying);
+        animation.attachAnimation(flier, flierIdle);
     }
 }
 
@@ -912,6 +938,7 @@ function initializeScene() {
         . . . . . . . . . . . . . . . .
         . . . . . . . . . . . . . . . .
     `, false)
+    // flier spawn point
     scene.setTile(3, img`
         . . . . . . . . . . . . . . . .
         . . . . . . . . . . . . . . . .
@@ -988,20 +1015,20 @@ function initializeScene() {
     // rock
     scene.setTile(7, img`
         f f f f f f f f f f f f f f f f
-        f f b d d b d d d b b d d d f f
-        f b c c b d d d b c d d d d b f
-        f d c d d d b b c c b d b b b f
-        f c d d d b c c b c c b b b c f
-        f d b b b c b b b b c c c c d f
-        f b d d d b c b b c d d d d d f
-        f b d d d d c c c c d b b b d f
-        f c b b b b c c c b b d d d b f
-        f c c c b b d d b c b b d d b f
-        f b b d d d d d b c c b b b b f
-        f d d b b d d d d d c c c b d f
-        f b d d b c d d b b b b b b b f
-        f b c c c b d b d d d b b c b f
-        f f d d d d b d d d b c c b f f
+        f f c c b b d d c b b b b d f f
+        f c c c b b d c c b c c b d c f
+        f c c b b b d d c c c b d c c f
+        f c b b b c c c b c c c c c c f
+        f d d c c d c b b d c c c c b f
+        f d c c d d b b d c b b b b d f
+        f c b b c c c d d c b d c d d f
+        f b b d c d c c b b b c d d c f
+        f c c c d d c b b c b b d c c f
+        f c b b d d c c c c b b d b d f
+        f b b c c d d c c b c c c c b f
+        f b d d c c b d c c d c c b d f
+        f d c c c b d c c d b c d c b f
+        f f b b b d c c d b d d d b f f
         f f f f f f f f f f f f f f f f
     `, true)
     scene.setTile(8, img`
@@ -1223,6 +1250,17 @@ game.onUpdate(function () {
             value.vx = Math.randomRange(30, 60);
         } else if (value.isHittingTile(CollisionDirection.Right)) {
             value.vx = Math.randomRange(-60, -30);
+        }
+    }
+})
+
+// Flier movement
+game.onUpdate(function () {
+    for (let value of sprites.allOfKind(SpriteKind.Flier)) {
+        if (Math.abs(value.x - hero.x) < 60) {
+            animation.setAction(value, ActionKind.Flying)
+        } else {
+            animation.setAction(value, ActionKind.Idle)
         }
     }
 })
