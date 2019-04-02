@@ -57,7 +57,7 @@ let levelMaps = [
         . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
         . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
         . . . . . . . . 5 . . . . . . . . . . . . . . . . . . . . . . .
-        . . 3 . 5 . . . . . . . . . . . . . . . . . . . . . . . . . . .
+        . . . . 5 . . . . . . . . . . . . . . . . . . . . . . . . . . .
         . . . . . . . . . . . 5 . . . . . . . . . . . . . . . . . . . .
         . . . . . . . . 7 . . 5 . 7 . . . . . . . . . . . . . . . . . 7
         . 1 . . 7 . . . 7 . 2 . . 7 . . . 2 7 . 2 . . 2 . 7 . e . . . 7
@@ -74,11 +74,11 @@ let levelMaps = [
         f f f f f f f f f f 7 f f f f f f f f f f 7 f f f f f f f f f f
     `,
     img`
-        . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+        . . . . . . . . . . . . . . . . . . . 3 . . . . . . . . 3 3 3 3
         . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
         . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
         . . . . . . . . . . 7 7 7 7 7 7 . . . . . . . . . . . . . . . .
-        . . . . . . . . 7 . 7 . 5 5 5 . . . . . . . . . . . . . . 5 5 5
+        . . . . . . . . 7 . 7 3 5 5 5 . . . . . . . . . . . . . . 5 5 5
         . . . . . 7 . . 7 . 7 . 5 5 5 . . . . . . . . . . . . . . 5 5 5
         . 1 . 7 . 7 . 2 2 . 7 . 5 5 5 . . . . . . . . . e . . . . 5 5 5
         f f f 7 f 7 f f f f 7 f f f f f f f f f f f f f f f f f f f f f
@@ -1330,8 +1330,20 @@ game.onUpdate(function () {
 game.onUpdate(function () {
     for (let value of sprites.allOfKind(SpriteKind.Flier)) {
         if (Math.abs(value.x - hero.x) < 60) {
+            if (value.x - hero.x < -5) {
+                value.vx = 25;
+            } else if (value.x - hero.x > 5) {
+                value.vx = -25;
+            }
+            if (value.y - hero.y < -5) {
+                value.vy = 25;
+            } else if (value.y - hero.y > 5) {
+                value.vy = -25;
+            }
             animation.setAction(value, ActionKind.Flying)
         } else {
+            value.vy = -20;
+            value.vx = 0;
             animation.setAction(value, ActionKind.Idle)
         }
     }
