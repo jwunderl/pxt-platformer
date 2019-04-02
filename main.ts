@@ -55,8 +55,8 @@ let levelMaps = [
         . . . . . . . . 5 . . . . . . . . . . . . . . . . . . . . . . .
         . . . . 5 . . . . . . . . . . . . . . . . . . . . . . . . . . .
         . . . . . . . . . . . 5 . . . . . . . . . . . . . . . . . . . .
-        . . . . . . . . 6 . . 5 . 6 . . . . . . . . . . . . . . . . . 6
-        . 1 . . 6 . . . 7 . 2 . . 7 . . . 2 6 . 2 . . 2 . 6 . e . . . 7
+        . . . . . . . . 7 . . 5 . 7 . . . . . . . . . . . . . . . . . 7
+        . 1 . . 7 . . . 7 . 2 . . 7 . . . 2 7 . 2 . . 2 . 7 . e . . . 7
         f f f f 7 f f f 7 f f f f 7 f f f f 7 f f f f f f 7 f f f f f 7
     `,
     img`
@@ -988,23 +988,23 @@ function initializeScene() {
         f f f f f f f f f f f f f f f f
         f f f f f f f f f f f f f f f f
     `, true)
-    // pipe
+    // rock
     scene.setTile(7, img`
-        f f 7 7 7 7 6 7 6 6 6 6 7 7 f f
-        f 6 7 7 7 7 6 7 6 6 6 7 6 7 6 f
-        f 6 7 7 7 7 6 7 6 6 6 6 7 7 6 f
-        f 6 7 7 7 7 6 7 6 6 6 6 6 7 6 f
-        f 6 7 7 7 7 6 7 6 6 6 6 7 7 6 f
-        f 6 7 7 7 7 6 7 6 6 6 7 6 7 6 f
-        f 6 7 7 7 7 6 7 6 6 6 6 7 7 6 f
-        f 6 7 7 7 7 6 7 6 6 6 6 6 7 6 f
-        f 6 7 7 7 7 6 7 6 6 6 6 7 7 6 f
-        f 6 7 7 7 7 6 7 6 6 6 7 6 7 6 f
-        f 6 7 7 7 7 6 7 6 6 6 6 7 7 6 f
-        f 6 7 7 7 7 6 7 6 6 6 6 6 7 6 f
-        f 6 7 7 7 7 6 7 6 6 6 6 7 7 6 f
-        f f 7 7 7 7 6 7 6 6 6 7 6 7 f f
         f f f f f f f f f f f f f f f f
+        f f b d d b d d d b b d d d f f
+        f b c c b d d d b c d d d d b f
+        f d d d d d b b c c b d b b b f
+        f d d d d b d d b c c b b b c f
+        f d b b b c d d b b c c c c d f
+        f b d d d b c b b c d d d d d f
+        f b d d d d c c c c d b b b d f
+        f c b b b b c c c d b d d d b f
+        f c c c b b d d b c b b d d b f
+        f b b d d d d d b c c b b b b f
+        f d d b b d d d d d c c c b d f
+        f b d d b c d d b b b b b b b f
+        f b c c c b d b d d d b b c b f
+        f f d d d d b d d d b c c b f f
         f f f f f f f f f f f f f f f f
     `, true)
     scene.setTile(8, img`
