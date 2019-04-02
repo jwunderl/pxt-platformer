@@ -984,7 +984,7 @@ function initializeScene() {
         . . . . . . . . . . . . . . . .
         . . . . . . . . . . . . . . . .
         . . . . . . . . . . . . . . . .
-    `, true)
+    `, false)
     // rock
     scene.setTile(7, img`
         f f f f f f f f f f f f f f f f
