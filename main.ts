@@ -683,6 +683,10 @@ game.onUpdate(function () {
         heroFacingLeft = false;
     }
 
+    if (hero.isHittingTile(CollisionDirection.Top)) {
+        hero.vy = 0;
+    }
+
     if (controller.down.isPressed()) {
         if (heroFacingLeft) {
             animation.setAction(hero, ActionKind.CrouchLeft);
