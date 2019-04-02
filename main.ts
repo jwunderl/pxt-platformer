@@ -45,7 +45,7 @@ let flierFlying: animation.Animation = null;
 let flierIdle: animation.Animation = null;
 // how long to pause between each contact with a
 // single enemy
-let invincibilityPeriod = 1000
+let invincibilityPeriod = 600
 let pixelsToMeters = 30
 let canDoubleJump = false
 let gravity = 9.81 * pixelsToMeters
@@ -724,9 +724,9 @@ sprites.onOverlap(SpriteKind.Player, SpriteKind.Bumper, function (sprite, otherS
 
 sprites.onOverlap(SpriteKind.Player, SpriteKind.Flier, function (sprite: Sprite, otherSprite: Sprite) {
     info.changeLifeBy(-1)
-    sprite.say("Ow!", invincibilityPeriod)
+    sprite.say("Ow!", invincibilityPeriod * 1.5)
     music.powerDown.play()
-    pause(invincibilityPeriod)
+    pause(invincibilityPeriod * 1.5)
 })
 
 function createEnemies() {
