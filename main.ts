@@ -71,7 +71,7 @@ let levelMaps = [
         . . . . . . 7 7 7 . 7 . . . . 7 . 7 . 7 5 7 . . . . . . . . . .
         7 . . . . 7 7 7 7 . 7 . . 7 . 7 5 7 5 7 5 7 . . . 5 5 5 5 5 5 5
         7 1 . . . . . . 2 . 7 . . 7 . 2 . . . 2 5 7 . . . . . . . . e .
-        f f f f f f f f f f 7 f f f f f f f f f f 7 f f f f f f f f f f
+        7 f f f f f f f f f 7 f f 7 f f f f f f f 7 f f f f f f f f f f
     `,
     img`
         . . . . . . . . . . . . . . . . . . . 3 . . . . . . . . 3 3 3 3
