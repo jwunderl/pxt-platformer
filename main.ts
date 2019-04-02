@@ -57,7 +57,7 @@ let levelMaps = [
         . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
         . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
         . . . . . . . . 5 . . . . . . . . . . . . . . . . . . . . . . .
-        . . . . 5 . . . . . . . . . . . . . . . . . . . . . . . . . . .
+        . . 3 . 5 . . . . . . . . . . . . . . . . . . . . . . . . . . .
         . . . . . . . . . . . 5 . . . . . . . . . . . . . . . . . . . .
         . . . . . . . . 7 . . 5 . 7 . . . . . . . . . . . . . . . . . 7
         . 1 . . 7 . . . 7 . 2 . . 7 . . . 2 7 . 2 . . 2 . 7 . e . . . 7
@@ -618,9 +618,61 @@ function initializeCoinAnimation() {
 
 function initializeFlierAnimations() {
     flierFlying = animation.createAnimation(ActionKind.Flying, 200)
-    flierFlying.addAnimationFrame(img`1`)
+    flierFlying.addAnimationFrame(img`
+        . . . . . . . . . . . . . . . .
+        . . . . . . . . . . . . . . . .
+        . . . . . . . . . . . . . . . .
+        . . . . . f f f f f f f . . . .
+        . . . . f 4 4 4 4 4 4 4 f . . .
+        . . . f 4 5 5 4 4 4 5 5 4 f . .
+        . f . f 4 4 4 5 4 5 4 4 4 f . f
+        . f f 4 4 4 4 4 4 4 4 4 4 4 f f
+        . f 4 4 4 4 4 5 4 5 4 4 4 4 4 f
+        . f 4 4 4 4 4 5 4 5 4 4 4 4 4 f
+        . f f 4 4 4 4 4 4 4 4 4 4 4 f f
+        . . . f 4 4 5 5 5 5 5 4 4 f . .
+        . . . . f 4 5 4 4 4 5 4 f . . .
+        . . . . . f f f f f f f . . . .
+        . . . . . . . . . . . . . . . .
+        . . . . . . . . . . . . . . . .
+    `)
+    flierFlying.addAnimationFrame(img`
+        . . . . . . . . . . . . . . . .
+        . . . . . . . . . . . . . . . .
+        . . . . . . . . . . . . . . . .
+        . . . . . f f f f f f f . . . .
+        . . . . f 4 4 4 4 4 4 4 f . . .
+        . . . f 4 5 5 4 4 4 5 5 4 f . .
+        . . . f 4 4 4 5 4 5 4 4 4 f . .
+        . . f 4 4 4 4 4 4 4 4 4 4 4 f .
+        . . f 4 4 4 4 5 4 5 4 4 4 4 f .
+        . f 4 4 4 4 4 5 4 5 4 4 4 4 4 f
+        . f 4 4 4 4 4 4 4 4 4 4 4 4 4 f
+        . f 4 f 4 4 5 5 5 5 5 4 4 f 4 f
+        . f f . f 4 5 4 4 4 5 4 f . f f
+        . f . . . f f f f f f f . . . f
+        . . . . . . . . . . . . . . . .
+        . . . . . . . . . . . . . . . .
+    `)
     flierIdle = animation.createAnimation(ActionKind.Idle, 200)
-    flierFlying.addAnimationFrame(img`1`)
+    flierFlying.addAnimationFrame(img`
+        . . . . . . . . . . . . . . . .
+        . . . . . . . . . . . . . . . .
+        . . . . . . . . . . . . . . . .
+        . . . . . f f f f f f f . . . .
+        . . . . f 4 4 4 4 4 4 4 f . . .
+        . . . f 4 5 5 4 4 4 5 5 4 f . .
+        . f . f 4 4 4 5 4 5 4 4 4 f . f
+        . f f 4 4 4 4 4 4 4 4 4 4 4 f f
+        . f 4 4 4 4 4 5 4 5 4 4 4 4 4 f
+        . f 4 4 4 4 4 5 4 5 4 4 4 4 4 f
+        . f f 4 4 4 4 4 4 4 4 4 4 4 f f
+        . . . f 4 4 5 5 5 5 5 4 4 f . .
+        . . . . f 4 5 4 4 4 5 4 f . . .
+        . . . . . f f f f f f f . . . .
+        . . . . . . . . . . . . . . . .
+        . . . . . . . . . . . . . . . .
+    `)
 }
 
 // set up hero animations
@@ -709,7 +761,24 @@ function createEnemies() {
 
     // enemy that flies at player
     for (let value of scene.getTilesByType(3)) {
-        let flier = sprites.create(img`1`)
+        let flier = sprites.create(img`
+            . . . . . . . . . . . . . . . .
+            . . . . . . . . . . . . . . . .
+            . . . . . . . . . . . . . . . .
+            . . . . . f f f f f f f . . . .
+            . . . . f 4 4 4 4 4 4 4 f . . .
+            . . . f 4 5 5 4 4 4 5 5 4 f . .
+            . f . f 4 4 4 5 4 5 4 4 4 f . f
+            . f f 4 4 4 4 4 4 4 4 4 4 4 f f
+            . f 4 4 4 4 4 5 4 5 4 4 4 4 4 f
+            . f 4 4 4 4 4 5 4 5 4 4 4 4 4 f
+            . f f 4 4 4 4 4 4 4 4 4 4 4 f f
+            . . . f 4 4 5 5 5 5 5 4 4 f . .
+            . . . . f 4 5 4 4 4 5 4 f . . .
+            . . . . . f f f f f f f . . . .
+            . . . . . . . . . . . . . . . .
+            . . . . . . . . . . . . . . . .
+        `, SpriteKind.Flier)
         value.place(flier);
         animation.attachAnimation(flier, flierFlying);
         animation.attachAnimation(flier, flierIdle);
@@ -1231,6 +1300,9 @@ function clearGame() {
         value.destroy()
     }
     for (let value of sprites.allOfKind(SpriteKind.Goal)) {
+        value.destroy()
+    }
+    for (let value of sprites.allOfKind(SpriteKind.Flier)) {
         value.destroy()
     }
 }
