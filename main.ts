@@ -61,11 +61,11 @@ let levelMaps = [
     `,
     img`
         . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
-        . . . . . . . . . . . . . . . . . . . . . 6 . . . . . . . . . .
-        . . . . . . . . . . . . . . . . . . . 6 5 7 . . . . . . . . . .
-        . . . . . . . 6 6 . 6 . . . . . . 6 . 7 5 7 . . . . . . . . . .
-        . . . . . . 6 7 7 . 7 . . . . 6 . 7 . 7 5 7 . . . . . . . . . .
-        6 . . . . 6 7 7 7 . 7 . . 6 . 7 5 7 5 7 5 7 . . . 5 5 5 5 5 5 5
+        . . . . . . . . . . . . . . . . . . . . . 7 . . . . . . . . . .
+        . . . . . . . . . . . . . . . . . . . 7 5 7 . . . . . . . . . .
+        . . . . . . . 7 7 . 7 . . . . . . 7 . 7 5 7 . . . . . . . . . .
+        . . . . . . 7 7 7 . 7 . . . . 7 . 7 . 7 5 7 . . . . . . . . . .
+        7 . . . . 7 7 7 7 . 7 . . 7 . 7 5 7 5 7 5 7 . . . 5 5 5 5 5 5 5
         7 1 . . . . . . 2 . 7 . . 7 . 2 . . . 2 5 7 . . . . . . . . e .
         f f f f f f f f f f 7 f f f f f f f f f f 7 f f f f f f f f f f
     `,
@@ -73,20 +73,20 @@ let levelMaps = [
         . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
         . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
         . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
-        . . . . . . . . . . 6 6 6 6 6 6 . . . . . . . . . . . . . . . .
-        . . . . . . . . 6 . 7 . 5 5 5 . . . . . . . . . . . . . . 5 5 5
-        . . . . . 6 . . 7 . 7 . 5 5 5 . . . . . . . . . . . . . . 5 5 5
-        . 1 . 6 . 7 . 2 2 . 7 . 5 5 5 . . . . . . . . . e . . . . 5 5 5
+        . . . . . . . . . . 7 7 7 7 7 7 . . . . . . . . . . . . . . . .
+        . . . . . . . . 7 . 7 . 5 5 5 . . . . . . . . . . . . . . 5 5 5
+        . . . . . 7 . . 7 . 7 . 5 5 5 . . . . . . . . . . . . . . 5 5 5
+        . 1 . 7 . 7 . 2 2 . 7 . 5 5 5 . . . . . . . . . e . . . . 5 5 5
         f f f 7 f 7 f f f f 7 f f f f f f f f f f f f f f f f f f f f f
     `,
     img`
         . . . . . . . . . . . 7 . . . . . . . . . . . . . . . . . . . .
         . . . . . . . . . . . 7 . . . . . . . . . . . . . . . . . . . .
-        . . . . . . . 6 . . . 7 . . . . . . . . . . . . . . . . . . . .
-        . . . . . 6 . 7 . . . . . . . . . . . . . . . . . . . . . . . .
-        . . . . 6 7 6 7 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 .
-        . . . 6 . . 5 . . 5 . 5 . . 5 . 5 . . 5 . 5 . . . 5 . . . 5 . .
-        . 1 . 7 e . . 2 . 2 . . . 2 . . . . . 2 . . . 2 . . . 2 . . . 6
+        . . . . . . . 7 . . . 7 . . . . . . . . . . . . . . . . . . . .
+        . . . . . 7 . 7 . . . . . . . . . . . . . . . . . . . . . . . .
+        . . . . 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 .
+        . . . 7 . . 5 . . 5 . 5 . . 5 . 5 . . 5 . 5 . . . 5 . . . 5 . .
+        . 1 . 7 e . . 2 . 2 . . . 2 . . . . . 2 . . . 2 . . . 2 . . . 7
         f f f 7 f f f f f f f f f f f f f f f f f f f f f f f f f f f 7
     `,
     img`
@@ -438,8 +438,6 @@ function animateJumps() {
 }
 
 function animateCrouch() {
-    /** crouch */
-
     let mainCrouchLeft = animation.createAnimation(ActionKind.CrouchLeft, 100);
     animation.attachAnimation(hero, mainCrouchLeft);
     mainCrouchLeft.addAnimationFrame(img`
@@ -969,36 +967,35 @@ function initializeScene() {
         . . . . . . . . . . . . . . . .
         . . . . . . . . . . . . . . . .
     `, false)
-    // pipe top
     scene.setTile(6, img`
-        . f f f f f f f f f f f f f f .
-        f f f f f f f f f f f f f f f f
-        f f 7 7 7 7 7 6 7 7 6 7 7 6 f f
-        f 7 7 7 7 7 6 7 6 7 6 7 6 7 7 f
-        f 7 7 7 7 7 6 6 6 6 7 6 7 7 7 f
-        f f 7 7 7 7 6 6 6 7 6 7 7 6 f f
-        f f f f f f f f f f f f f f f f
-        f f f f f f f f f f f f f f f f
-        f f 7 7 7 7 6 7 6 6 6 7 6 7 f f
-        f 6 7 7 7 7 6 7 6 6 6 7 6 7 f f
-        f 6 7 7 7 7 6 7 6 6 6 6 7 7 6 f
-        f 6 7 7 7 7 6 7 6 6 6 6 6 7 6 f
-        f 6 7 7 7 7 6 7 6 6 6 6 7 7 6 f
-        f f 7 7 7 7 6 7 6 6 6 7 6 7 f f
-        f f f f f f f f f f f f f f f f
-        f f f f f f f f f f f f f f f f
+        . . . . . . . . . . . . . . . .
+        . . . . . . . . . . . . . . . .
+        . . . . . . . . . . . . . . . .
+        . . . . . . . . . . . . . . . .
+        . . . . . . . . . . . . . . . .
+        . . . . . . . . . . . . . . . .
+        . . . . . . . . . . . . . . . .
+        . . . . . . . . . . . . . . . .
+        . . . . . . . . . . . . . . . .
+        . . . . . . . . . . . . . . . .
+        . . . . . . . . . . . . . . . .
+        . . . . . . . . . . . . . . . .
+        . . . . . . . . . . . . . . . .
+        . . . . . . . . . . . . . . . .
+        . . . . . . . . . . . . . . . .
+        . . . . . . . . . . . . . . . .
     `, true)
     // rock
     scene.setTile(7, img`
         f f f f f f f f f f f f f f f f
         f f b d d b d d d b b d d d f f
         f b c c b d d d b c d d d d b f
-        f d d d d d b b c c b d b b b f
-        f d d d d b d d b c c b b b c f
-        f d b b b c d d b b c c c c d f
+        f d c d d d b b c c b d b b b f
+        f c d d d b c c b c c b b b c f
+        f d b b b c b b b b c c c c d f
         f b d d d b c b b c d d d d d f
         f b d d d d c c c c d b b b d f
-        f c b b b b c c c d b d d d b f
+        f c b b b b c c c b b d d d b f
         f c c c b b d d b c b b d d b f
         f b b d d d d d b c c b b b b f
         f d d b b d d d d d c c c b d f
