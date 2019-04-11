@@ -24,21 +24,21 @@ enum ActionKind {
 
 let hero = sprites.create(img`
     . . . . . . . . . . . . . . . .
-    . . . . . . . . . . . . . . . .
-    . . . . e e e e e e e e e . . .
-    . . . e e e e e e e e e e . . .
-    . . . e e e e e e e e e e . . .
-    . . . d e e d d d d d d d . . .
-    . . . d e d d f d d d f d . . .
-    . . . e d d d f d d d f d . . .
-    . . . . d d d d d d d d d . . .
-    . . . . d d d d 1 1 d d d . . .
-    . . . . a a c c c c c c a . . .
-    . . . . d d c c c c c c d . . .
-    . . . . d d f f f 9 f f d . . .
-    . . . . a a a a a a a a . . . .
-    . . . . . a a . . a a . . . . .
-    . . . . . e e . . e e . . . . .
+    . . . f f f f f f f f f f . . .
+    . . f e e e e e e e e e e f . .
+    . f e e e e e e e e e e e e f .
+    . f d e e d d d d d d d d d f .
+    . f d e d d f d d d d f d d f .
+    . f e d d d f d d d d f d d f .
+    . . f d d d f d d d d f d d f .
+    . . f d d d d d d d d d d d f .
+    . . f b a c c c c c c c c a f .
+    . . f d d d c c c c c c d d f .
+    . . f d d f f f b b f f f d f .
+    . . f b a a a a a a a a a f . .
+    . . . f b a a f f b a a f . . .
+    . . . f b a a f f b a a f . . .
+    . . . . f f f . . f f f . . . .
 `, SpriteKind.Player)
 let coinAnimation: animation.Animation = null;
 let flierFlying: animation.Animation = null;
@@ -58,9 +58,9 @@ let levelMaps = [
         . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
         . . . . . . . . 5 . . . . . . . . . . . . . . . . . . . . . . .
         . . . . 5 . . . . . . . . . . . . . . . . . . . . . . . . . . .
-        . . . . . . . . . . . 5 . . . . . . . . . . . . . . . . . . . .
+        . 1 . . . . . . . . . 5 . . . . . . . . . . . . . . . . . . . .
         . . . . . . . . 7 . . 5 . 7 . . . . . . . . . . . . . . . . . 7
-        . 1 . . 7 . . . 7 . 2 . . 7 . . . 2 7 . 2 . . 2 . 7 . e . . . 7
+        . . . . 7 . . . 7 . 2 . . 7 . . . 2 7 . 2 . . 2 . 7 . e . . . 7
         f f f f 7 f f f 7 f f f f 7 f f f f 7 f f f f f f 7 f f f f f 7
     `,
     img`
@@ -119,6 +119,55 @@ initializeAnimations()
 initializeScene()
 createPlayer(hero)
 initializeLevel(currentLevel)
+giveIntroduction()
+
+function showInstruction(text: string) {
+    game.showLongText(text, DialogLayout.Bottom)
+    music.baDing.play()
+    info.changeScoreBy(1)
+}
+
+function giveIntroduction() {
+    game.setDialogFrame(img`
+        . 2 2 2 2 2 2 2 2 2 2 2 2 2 . .
+        2 2 1 1 1 1 1 1 1 1 1 1 1 2 2 .
+        2 1 1 2 2 2 2 2 2 2 2 2 1 1 2 .
+        2 1 2 1 1 1 1 1 1 1 1 1 2 1 2 .
+        2 1 2 1 1 1 1 1 1 1 1 1 2 1 2 .
+        2 1 2 1 1 1 1 1 1 1 1 1 2 1 2 .
+        2 1 2 1 1 1 1 1 1 1 1 1 2 1 2 .
+        2 1 2 1 1 1 1 1 1 1 1 1 2 1 2 .
+        2 1 2 1 1 1 1 1 1 1 1 1 2 1 2 .
+        2 1 2 1 1 1 1 1 1 1 1 1 2 1 2 .
+        2 1 2 1 1 1 1 1 1 1 1 1 2 1 2 .
+        2 1 2 1 1 1 1 1 1 1 1 1 2 1 2 .
+        2 1 1 2 2 2 2 2 2 2 2 2 1 1 2 .
+        2 2 1 1 1 1 1 1 1 1 1 1 1 2 2 .
+        . 2 2 2 2 2 2 2 2 2 2 2 2 2 . .
+        . . . . . . . . . . . . . . . .
+    `)
+    game.setDialogCursor(img`
+        . . . . . . . . . . . . . . . .
+        . . . . . . . . . . . . . . . .
+        . . . . . . . . . . . . . . . .
+        . . . . . . f f f f . . . . . .
+        . . . . f f 5 5 5 5 f f . . . .
+        . . . . f 5 5 5 5 5 5 f . . . .
+        . . . f 5 5 5 4 4 5 5 5 f . . .
+        . . . f 5 5 5 4 4 5 5 5 f . . .
+        . . . f 5 5 5 4 4 5 5 5 f . . .
+        . . . f 5 5 5 4 4 5 5 5 f . . .
+        . . . . f 5 5 5 5 5 5 f . . . .
+        . . . . f f 5 5 5 5 f f . . . .
+        . . . . . . f f f f . . . . . .
+        . . . . . . . . . . . . . . . .
+        . . . . . . . . . . . . . . . .
+        . . . . . . . . . . . . . . . .
+    `)
+    showInstruction("Move with the left and right buttons.")
+    showInstruction("Jump with the up or A button.")
+    showInstruction("Double jump by pressing jump again.")
+}
 
 function initializeAnimations() {
     initializeHeroAnimations();
